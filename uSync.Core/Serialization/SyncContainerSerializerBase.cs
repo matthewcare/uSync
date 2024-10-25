@@ -228,15 +228,29 @@ public abstract class SyncContainerSerializerBase<TObject>
     {
         if (entityTypeContainerTypeService is null) return Attempt<EntityContainer?, EntityContainerOperationStatus>.Fail(EntityContainerOperationStatus.InvalidObjectType);
 
-        var parent = await entityTypeContainerTypeService.GetAsync(parentKey);
-        if (parent is null || parent.Name is null)
-            return Attempt<EntityContainer?, EntityContainerOperationStatus>.Fail(EntityContainerOperationStatus.ParentNotFound);
+        int parentLevel = 1;
+        Guid? parentKeyValue = parentKey == Guid.Empty ? null : parentKey;
 
-        var existing = (await entityTypeContainerTypeService.GetAsync(name, parent.Level)).FirstOrDefault(x => x.Name.InvariantEquals(name));    
+        if (parentKeyValue is not null)
+        {
+            var parent = await entityTypeContainerTypeService.GetAsync(parentKeyValue.Value);
+            if (parent is null || parent.Name is null)
+                return Attempt<EntityContainer?, EntityContainerOperationStatus>.Fail(EntityContainerOperationStatus.ParentNotFound);
+
+            parentLevel = parent.Level;
+        }
+
+        var existing = (await entityTypeContainerTypeService.GetAsync(name, parentLevel)).FirstOrDefault(x => x.Name.InvariantEquals(name));
         if (existing is null || existing.Name is null)
-            return await entityTypeContainerTypeService.CreateAsync(Guid.NewGuid(), name, parentKey, Constants.Security.SuperUserKey);
-        else 
-            return await entityTypeContainerTypeService.UpdateAsync(existing.Key, existing.Name, Constants.Security.SuperUserKey);
+        {
+            var result = await entityTypeContainerTypeService.CreateAsync(Guid.NewGuid(), name, parentKeyValue, Constants.Security.SuperUserKey);
+            return result;
+        }
+        else
+        {           
+            var result = await entityTypeContainerTypeService.UpdateAsync(existing.Key, existing.Name, Constants.Security.SuperUserKey);
+            return result;
+        }
     }
 
     protected virtual async Task<EntityContainer?> FindFolderAsync(Guid key, string path)
