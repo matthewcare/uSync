@@ -246,4 +246,7 @@ public class MediaSerializer : ContentSerializerBase<IMedia>, ISyncSerializer<IM
     public override Task DeleteItemAsync(IMedia item)
         => uSyncTaskHelper.FromResultOf(() => { return _mediaService.Delete(item); });
 
+    protected override Task<IMedia?> FindParentByIdAsync(int id)
+        => Task.FromResult(_mediaService.GetById(id));
+
 }

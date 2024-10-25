@@ -724,6 +724,9 @@ public class ContentSerializer : ContentSerializerBase<IContent>, ISyncSerialize
 
     #endregion
 
+    protected override Task<IContent?> FindParentByIdAsync(int id)
+        => Task.FromResult(contentService.GetById(id));
+
     public override Task SaveAsync(IEnumerable<IContent> items)
         => Task.FromResult(contentService.Save(items));
 

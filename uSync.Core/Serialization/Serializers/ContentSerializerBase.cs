@@ -134,7 +134,7 @@ public abstract class ContentSerializerBase<TObject> : SyncTreeSerializerBase<TO
             }
             else
             {
-                var parent = await FindItemAsync(item.Key);
+                var parent = await FindParentByIdAsync(item.ParentId);
                 if (parent != null)
                 {
                     parentKey = parent.Key;
@@ -1063,6 +1063,11 @@ public abstract class ContentSerializerBase<TObject> : SyncTreeSerializerBase<TO
             return null;
         }
     }
+
+    /// <summary>`
+    ///  find the item by id, (we really don't want to do this, but parents are only stored in content by id).
+    /// </summary>
+    protected abstract Task<TObject?> FindParentByIdAsync(int id);
 
 
     /// <summary>
