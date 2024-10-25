@@ -37,7 +37,7 @@ internal sealed class uSyncManifestReader : IPackageManifestReader
                 Extensions = [ new JsonObject {
                     ["name"] = "usync.entrypoint",
                     ["alias"] = "uSync EntryPoint",
-                    ["type"] = "entryPoint",
+                    ["type"] = "backofficeEntryPoint",
                     ["js"] = script
                 }],
                 Importmap = new PackageManifestImportmap
