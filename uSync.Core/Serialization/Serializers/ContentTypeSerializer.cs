@@ -95,8 +95,8 @@ public class ContentTypeSerializer : ContentTypeBaseSerializer<IContentType>, IS
             info.Add(templates);
 
         node.Add(info);
-        node.Add(SerializeStructure(item));
-        node.Add(SerializePropertiesAsync(item));
+        node.Add(await SerializeStructureAsync(item));
+        node.Add(await SerializePropertiesAsync(item));
         node.Add(SerializeTabs(item));
 
         return SyncAttempt<XElement>.Succeed(item.Name ?? item.Alias, node, typeof(IContentType), ChangeType.Export);
