@@ -298,26 +298,27 @@ public static class XElementExtensions
     public static string MakePlatformSafeHash(this XElement node)
         => node.MakePlatformSafeHashAsync().Result;
 
-    private static XmlWriterSettings _xmlWriterSettings = new XmlWriterSettings {
+    private static XmlWriterSettings _xmlWriterSettings = new XmlWriterSettings
+    {
         NewLineChars = "\r\n",
         Async = true
     };
 
-public static async Task<string> MakePlatformSafeHashAsync(this XElement node)
+    public static async Task<string> MakePlatformSafeHashAsync(this XElement node)
     {
-        using (MemoryStream s = new MemoryStream())
-		{
-			// for consistency across platforms we need to harmonize line endings.
-			using (var writer = XmlWriter.Create(s, _xmlWriterSettings))
-			{
+        using (MemoryStream stream = new MemoryStream())
+        {
+            // for consistency across platforms we need to harmonize line endings.
+            using (var writer = XmlWriter.Create(stream, _xmlWriterSettings))
+            {
                 await node.SaveAsync(writer, CancellationToken.None);
-                await writer.FlushAsync();
-				s.Position = 0;
-				using (HashAlgorithm hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? SHA1.Create() : MD5.Create())
-				{
-					return BitConverter.ToString(hashAlgorithm.ComputeHash(s)).Replace("-", "").ToLower();
-				}
-			}
-		}
-	}
+                stream.Seek(0, SeekOrigin.Begin);
+                using (HashAlgorithm hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? SHA1.Create() : MD5.Create())
+                {
+                    var hash = await hashAlgorithm.ComputeHashAsync(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLower();
+                }
+            }
+        }
+    }
 }
