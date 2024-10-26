@@ -1,8 +1,8 @@
-﻿using System.Text.RegularExpressions;
-
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+
+using System.Text.RegularExpressions;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Configuration.Models;

@@ -1,9 +1,7 @@
-﻿using System.Reflection;
-using System.Security.Cryptography;
-using System.Xml;
-using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Reflection;
+using System.Xml.Linq;
 
 using uSync.Core.Models;
 
@@ -53,7 +51,7 @@ public abstract class SyncSerializerRoot<TObject>
     protected virtual Task<SyncAttempt<TObject>> CanDeserializeAsync(XElement node, SyncSerializerOptions options)
         => Task.FromResult(SyncAttempt<TObject>.Succeed("No Check", ChangeType.NoChange));
 
-    public async Task<SyncAttempt<TObject>> DeserializeAsync(XElement node, SyncSerializerOptions options)   
+    public async Task<SyncAttempt<TObject>> DeserializeAsync(XElement node, SyncSerializerOptions options)
     {
         if (node.IsEmptyItem())
         {
@@ -162,7 +160,7 @@ public abstract class SyncSerializerRoot<TObject>
             case SyncActionType.Delete:
                 if (options.DeleteItems())
                     return await ProcessDeleteAsync(key, alias, options.Flags);
-                
+
                 return SyncAttempt<TObject>.Succeed(alias, ChangeType.NoChange);
             case SyncActionType.Rename:
                 return ProcessRename(key, alias, options.Flags);
@@ -291,17 +289,17 @@ public abstract class SyncSerializerRoot<TObject>
     {
         if (node == null) return string.Empty;
         node = CleanseNode(node);
-        
-        return await node.MakePlatformSafeHashAsync();
-	}
 
-	/// <summary>
-	///  cleans up the node, removing things that are not generic (like internal Ids)
-	///  so that the comparisons are like for like.
-	/// </summary>
-	/// <param name="node"></param>
-	/// <returns></returns>
-	protected virtual XElement CleanseNode(XElement node) => node;
+        return await node.MakePlatformSafeHashAsync();
+    }
+
+    /// <summary>
+    ///  cleans up the node, removing things that are not generic (like internal Ids)
+    ///  so that the comparisons are like for like.
+    /// </summary>
+    /// <param name="node"></param>
+    /// <returns></returns>
+    protected virtual XElement CleanseNode(XElement node) => node;
 
 
     #region Finders 

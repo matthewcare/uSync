@@ -9,7 +9,7 @@ internal class LogViewerMigration : MigrationBase
     private readonly ILogViewerService _logViewerService;
 
     public LogViewerMigration(
-		ILogViewerService logViewerService,
+        ILogViewerService logViewerService,
         IMigrationContext context) : base(context)
     {
         _logViewerService = logViewerService;
@@ -24,6 +24,6 @@ internal class LogViewerMigration : MigrationBase
 
         _logViewerService
             .AddSavedLogQueryAsync(name, _uSyncLogQuery).Wait();
-        
+
     }
 }

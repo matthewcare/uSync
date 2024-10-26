@@ -19,7 +19,7 @@ public class SyncActionButton
     public string Color { get; set; } = "default";
 
     public bool Force { get; set; } = false;
-    public bool Clean { get; set;} = false;
+    public bool Clean { get; set; } = false;
 
     public List<SyncActionButton> Children { get; set; } = [];
 }

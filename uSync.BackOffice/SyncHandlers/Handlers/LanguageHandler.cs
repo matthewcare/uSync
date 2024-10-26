@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -6,8 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Events;
@@ -69,21 +69,21 @@ public class LanguageHandler : SyncHandlerBase<ILanguage>, ISyncHandler,
     protected override string GetItemPath(ILanguage item, bool useGuid, bool isFlat)
         => item.IsoCode.ToSafeFileName(shortStringHelper);
 
-	/// <summary>
-	///  order the merged items, making sure the default language is first. 
-	/// </summary>
-	protected override async Task<IReadOnlyList<OrderedNodeInfo>> GetMergedItemsAsync(string[] folders)
-		=> (await base.GetMergedItemsAsync(folders))
-			.OrderBy(x => x.Node.Element("IsDefault").ValueOrDefault(false) ? 0 : 1)
-			.ToList();
+    /// <summary>
+    ///  order the merged items, making sure the default language is first. 
+    /// </summary>
+    protected override async Task<IReadOnlyList<OrderedNodeInfo>> GetMergedItemsAsync(string[] folders)
+        => (await base.GetMergedItemsAsync(folders))
+            .OrderBy(x => x.Node.Element("IsDefault").ValueOrDefault(false) ? 0 : 1)
+            .ToList();
 
-	/// <summary>
-	///  ensure we import the 'default' language first, so we don't get errors doing it. 
-	/// </summary>
-	/// <remarks>
-	///  prost v13.1 this method isn't used to determine the order for all options.
-	/// </remarks>
-	protected override IEnumerable<string> GetImportFiles(string folder)
+    /// <summary>
+    ///  ensure we import the 'default' language first, so we don't get errors doing it. 
+    /// </summary>
+    /// <remarks>
+    ///  prost v13.1 this method isn't used to determine the order for all options.
+    /// </remarks>
+    protected override IEnumerable<string> GetImportFiles(string folder)
     {
         var files = base.GetImportFiles(folder);
 
@@ -200,7 +200,8 @@ public class LanguageHandler : SyncHandlerBase<ILanguage>, ISyncHandler,
         {
             bool newItem = false;
 
-            if (newLanguages.TryRemove(item.IsoCode, out var _)) {
+            if (newLanguages.TryRemove(item.IsoCode, out var _))
+            {
                 newItem = true;
             }
 
@@ -220,8 +221,8 @@ public class LanguageHandler : SyncHandlerBase<ILanguage>, ISyncHandler,
             {
                 // The language code changed, this can mean we need to do a full content export. 
                 // + we should export the languages again!
-                uSyncTriggers.TriggerExport(targetFolders, 
-                    [ UdiEntityType.Document, UdiEntityType.Language ], null);
+                uSyncTriggers.TriggerExport(targetFolders,
+                    [UdiEntityType.Document, UdiEntityType.Language], null);
             }
 
             // we always clean up languages, because of the way they are stored. 

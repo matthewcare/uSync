@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+
+using System;
+using System.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.DependencyInjection;

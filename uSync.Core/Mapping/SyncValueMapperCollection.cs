@@ -88,12 +88,12 @@ public class SyncValueMapperCollection
         return value;
     }
 
-	static readonly char[] _trimChars = ['\"', '\''];
+    static readonly char[] _trimChars = ['\"', '\''];
 
-	/// <summary>
-	///  cleans and flattens the JSON , so the stuff we import doesn't actually have all the spaces in it. 
-	/// </summary>
-	private static string GetCleanFlatJson(string stringValue)
+    /// <summary>
+    ///  cleans and flattens the JSON , so the stuff we import doesn't actually have all the spaces in it. 
+    /// </summary>
+    private static string GetCleanFlatJson(string stringValue)
     {
         if (stringValue.TryConvertToJsonNode(out var result) is false || result is null)
             return stringValue.Trim(_trimChars);

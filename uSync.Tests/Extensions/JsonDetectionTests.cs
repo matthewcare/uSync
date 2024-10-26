@@ -1,7 +1,6 @@
-﻿using System.Text.Json.Nodes;
+﻿using NUnit.Framework;
 
-
-using NUnit.Framework;
+using System.Text.Json.Nodes;
 
 using uSync.Core.Extensions;
 

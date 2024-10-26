@@ -1,15 +1,13 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
-using Umbraco.Cms.Api.Management.Factories;
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Entities;
 using Umbraco.Cms.Core.PropertyEditors;
 using Umbraco.Cms.Core.Serialization;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Cms.Core.Services.OperationStatus;
 using Umbraco.Extensions;
 
 using uSync.Core.DataTypes;
@@ -28,22 +26,22 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
     private readonly PropertyEditorCollection _propertyEditors;
     private readonly IConfigurationEditorJsonSerializer _jsonSerializer;
 
-	public DataTypeSerializer(IEntityService entityService, ILogger<DataTypeSerializer> logger,
-		IDataTypeService dataTypeService,
+    public DataTypeSerializer(IEntityService entityService, ILogger<DataTypeSerializer> logger,
+        IDataTypeService dataTypeService,
         IDataTypeContainerService dataTypeContainerService,
         DataEditorCollection dataEditors,
-		ConfigurationSerializerCollection configurationSerializers,
-		PropertyEditorCollection propertyEditors,
-		IConfigurationEditorJsonSerializer jsonSerializer)
-		: base(entityService,  dataTypeContainerService, logger, UmbracoObjectTypes.DataTypeContainer)
-	{
-		this._dataTypeService = dataTypeService;
+        ConfigurationSerializerCollection configurationSerializers,
+        PropertyEditorCollection propertyEditors,
+        IConfigurationEditorJsonSerializer jsonSerializer)
+        : base(entityService, dataTypeContainerService, logger, UmbracoObjectTypes.DataTypeContainer)
+    {
+        this._dataTypeService = dataTypeService;
         this._dataTypeContainerService = dataTypeContainerService;
         this._dataEditors = dataEditors;
-		this._configurationSerializers = configurationSerializers;
-		this._propertyEditors = propertyEditors;
-		this._jsonSerializer = jsonSerializer;
-	}
+        this._configurationSerializers = configurationSerializers;
+        this._propertyEditors = propertyEditors;
+        this._jsonSerializer = jsonSerializer;
+    }
 
     /// <summary>
     ///  Process deletes
@@ -125,27 +123,27 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
         var dataBaseType = GetEditorValueStorageType(editor);
         if (item.DatabaseType != dataBaseType)
         {
-			details.AddUpdate("DatabaseType", item.DatabaseType, dataBaseType, "DatabaseType");
+            details.AddUpdate("DatabaseType", item.DatabaseType, dataBaseType, "DatabaseType");
             item.DatabaseType = dataBaseType;
-		}
+        }
 
         var editorUiAlias = info?.Element("EditorUIAlias").ValueOrDefault(string.Empty) ?? string.Empty;
 
         // migration thing if this is missing we guess it.
         if (editorUiAlias.IsNullOrWhiteSpace())
-			editorUiAlias = ToPropertyEditorUiAlias(editorAlias) ?? string.Empty;
+            editorUiAlias = ToPropertyEditorUiAlias(editorAlias) ?? string.Empty;
 
         if (item.EditorUiAlias != editorUiAlias)
         {
-			details.AddUpdate("EditorUIAlias", item.EditorUiAlias ?? "", editorUiAlias, "EditorUIAlias");
-			item.EditorUiAlias = editorUiAlias;
-		}
+            details.AddUpdate("EditorUIAlias", item.EditorUiAlias ?? "", editorUiAlias, "EditorUIAlias");
+            item.EditorUiAlias = editorUiAlias;
+        }
 
-		// we no longer read the db type value from the xml. 
-		// info?.Element("DatabaseType")?.ValueOrDefault(ValueStorageType.Nvarchar) ?? ValueStorageType.Nvarchar;
+        // we no longer read the db type value from the xml. 
+        // info?.Element("DatabaseType")?.ValueOrDefault(ValueStorageType.Nvarchar) ?? ValueStorageType.Nvarchar;
 
-		// config 
-		if (ShouldDesterilizeConfig(name, editorAlias, options))
+        // config 
+        if (ShouldDesterilizeConfig(name, editorAlias, options))
         {
             details.AddRange(DeserializeConfiguration(item, node));
         }
@@ -181,7 +179,7 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
         return null;
     }
 
-	private List<uSyncChange> DeserializeConfiguration(IDataType item, XElement node)
+    private List<uSyncChange> DeserializeConfiguration(IDataType item, XElement node)
     {
         var config = node.Element("Config").ValueOrDefault(string.Empty);
         if (string.IsNullOrEmpty(config)) return [];
@@ -194,12 +192,13 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
             return changes;
         }
 
-		// v8,9,etc configs the properties 
-		importData = importData.ConvertToCamelCase();
+        // v8,9,etc configs the properties 
+        importData = importData.ConvertToCamelCase();
 
-		// multiple serializers can run per property. 
-		var serializers = _configurationSerializers.GetSerializers(item.EditorAlias);
-        foreach(var serializer in serializers) {
+        // multiple serializers can run per property. 
+        var serializers = _configurationSerializers.GetSerializers(item.EditorAlias);
+        foreach (var serializer in serializers)
+        {
             logger.LogDebug("Running Configuration Serializer : {name} for {type}", serializer.Name, item.EditorAlias);
             importData = serializer.GetConfigurationImport(importData);
         }
@@ -247,7 +246,7 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
     private XElement SerializeConfiguration(IDataType item)
     {
         var serializer = _configurationSerializers.GetSerializer(item.EditorAlias);
-        
+
         var configurationObject = TryGetConfigurationObject(item);
 
         // merge the configurationData and configurationObject into one dictionary
@@ -299,37 +298,37 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
         });
     }
 
-	private IDataEditor? FindDataEditor(string editorAlias)
-	{
-		var newEditor = _dataEditors.FirstOrDefault(x => x.Alias.InvariantEquals(editorAlias))
-			?? _propertyEditors.FirstOrDefault(x => x.Alias.InvariantEquals(editorAlias));
+    private IDataEditor? FindDataEditor(string editorAlias)
+    {
+        var newEditor = _dataEditors.FirstOrDefault(x => x.Alias.InvariantEquals(editorAlias))
+            ?? _propertyEditors.FirstOrDefault(x => x.Alias.InvariantEquals(editorAlias));
 
-		if (newEditor is not null) return newEditor;
+        if (newEditor is not null) return newEditor;
 
-		var serializers = _configurationSerializers.GetSerializers(editorAlias);
-		if (serializers is null) return null;
+        var serializers = _configurationSerializers.GetSerializers(editorAlias);
+        if (serializers is null) return null;
 
-		foreach (var serializer in serializers)
-		{
-			var newAlias = serializer.GetEditorAlias();
-			if (newAlias is not null)
-			{
-				newEditor = _dataEditors.FirstOrDefault(x => x.Alias.InvariantEquals(newAlias))
-					?? _propertyEditors.FirstOrDefault(x => x.Alias.InvariantEquals(newAlias));
+        foreach (var serializer in serializers)
+        {
+            var newAlias = serializer.GetEditorAlias();
+            if (newAlias is not null)
+            {
+                newEditor = _dataEditors.FirstOrDefault(x => x.Alias.InvariantEquals(newAlias))
+                    ?? _propertyEditors.FirstOrDefault(x => x.Alias.InvariantEquals(newAlias));
 
                 if (newEditor is not null)
                 {
                     logger.LogDebug("Editor replacement for {alias} found : {newAlias}", editorAlias, newAlias);
                     return newEditor;
                 }
-			}
-		}
+            }
+        }
 
-		return null;
+        return null;
 
 
-	}
-	protected override string GetItemBaseType(XElement node)
+    }
+    protected override string GetItemBaseType(XElement node)
         => node.Element(uSyncConstants.Xml.Info)?.Element("EditorAlias").ValueOrDefault(string.Empty) ?? string.Empty;
 
     public override async Task<IDataType?> FindItemAsync(Guid key)
@@ -344,13 +343,13 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
 
         if (item.Id <= 0)
             await _dataTypeService.CreateAsync(item, Constants.Security.SuperUserKey);
-        else 
+        else
             await _dataTypeService.UpdateAsync(item, Constants.Security.SuperUserKey);
     }
 
     public override async Task SaveAsync(IEnumerable<IDataType> items)
     {
-        foreach(var item in items)
+        foreach (var item in items)
             await SaveItemAsync(item);
     }
 
@@ -405,40 +404,40 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
     /// </remarks>
     private static string? ToPropertyEditorUiAlias(string editorAlias)
     {
-		return editorAlias switch
-		{
-			Constants.PropertyEditors.Aliases.BlockList => "Umb.PropertyEditorUi.BlockList",
-			Constants.PropertyEditors.Aliases.BlockGrid => "Umb.PropertyEditorUi.BlockGrid",
-			Constants.PropertyEditors.Aliases.CheckBoxList => "Umb.PropertyEditorUi.CheckBoxList",
-			Constants.PropertyEditors.Aliases.ColorPicker => "Umb.PropertyEditorUi.ColorPicker",
-			Constants.PropertyEditors.Aliases.ColorPickerEyeDropper => "Umb.PropertyEditorUi.EyeDropper",
-			Constants.PropertyEditors.Aliases.ContentPicker => "Umb.PropertyEditorUi.DocumentPicker",
-			Constants.PropertyEditors.Aliases.DateTime => "Umb.PropertyEditorUi.DatePicker",
-			Constants.PropertyEditors.Aliases.DropDownListFlexible => "Umb.PropertyEditorUi.Dropdown",
-			Constants.PropertyEditors.Aliases.ImageCropper => "Umb.PropertyEditorUi.ImageCropper",
-			Constants.PropertyEditors.Aliases.Integer => "Umb.PropertyEditorUi.Integer",
-			Constants.PropertyEditors.Aliases.Decimal => "Umb.PropertyEditorUi.Decimal",
-			Constants.PropertyEditors.Aliases.ListView => "Umb.PropertyEditorUi.Collection",
-			Constants.PropertyEditors.Aliases.MediaPicker3 => "Umb.PropertyEditorUi.MediaPicker",
-			Constants.PropertyEditors.Aliases.MemberPicker => "Umb.PropertyEditorUi.MemberPicker",
-			Constants.PropertyEditors.Aliases.MemberGroupPicker => "Umb.PropertyEditorUi.MemberGroupPicker",
-			Constants.PropertyEditors.Aliases.MultiNodeTreePicker => "Umb.PropertyEditorUi.ContentPicker",
-			Constants.PropertyEditors.Aliases.MultipleTextstring => "Umb.PropertyEditorUi.MultipleTextString",
-			Constants.PropertyEditors.Aliases.Label => "Umb.PropertyEditorUi.Label",
-			Constants.PropertyEditors.Aliases.RadioButtonList => "Umb.PropertyEditorUi.RadioButtonList",
-			Constants.PropertyEditors.Aliases.Slider => "Umb.PropertyEditorUi.Slider",
-			Constants.PropertyEditors.Aliases.Tags => "Umb.PropertyEditorUi.Tags",
-			Constants.PropertyEditors.Aliases.TextBox => "Umb.PropertyEditorUi.TextBox",
-			Constants.PropertyEditors.Aliases.TextArea => "Umb.PropertyEditorUi.TextArea",
-			Constants.PropertyEditors.Aliases.RichText => "Umb.PropertyEditorUi.TinyMCE",
+        return editorAlias switch
+        {
+            Constants.PropertyEditors.Aliases.BlockList => "Umb.PropertyEditorUi.BlockList",
+            Constants.PropertyEditors.Aliases.BlockGrid => "Umb.PropertyEditorUi.BlockGrid",
+            Constants.PropertyEditors.Aliases.CheckBoxList => "Umb.PropertyEditorUi.CheckBoxList",
+            Constants.PropertyEditors.Aliases.ColorPicker => "Umb.PropertyEditorUi.ColorPicker",
+            Constants.PropertyEditors.Aliases.ColorPickerEyeDropper => "Umb.PropertyEditorUi.EyeDropper",
+            Constants.PropertyEditors.Aliases.ContentPicker => "Umb.PropertyEditorUi.DocumentPicker",
+            Constants.PropertyEditors.Aliases.DateTime => "Umb.PropertyEditorUi.DatePicker",
+            Constants.PropertyEditors.Aliases.DropDownListFlexible => "Umb.PropertyEditorUi.Dropdown",
+            Constants.PropertyEditors.Aliases.ImageCropper => "Umb.PropertyEditorUi.ImageCropper",
+            Constants.PropertyEditors.Aliases.Integer => "Umb.PropertyEditorUi.Integer",
+            Constants.PropertyEditors.Aliases.Decimal => "Umb.PropertyEditorUi.Decimal",
+            Constants.PropertyEditors.Aliases.ListView => "Umb.PropertyEditorUi.Collection",
+            Constants.PropertyEditors.Aliases.MediaPicker3 => "Umb.PropertyEditorUi.MediaPicker",
+            Constants.PropertyEditors.Aliases.MemberPicker => "Umb.PropertyEditorUi.MemberPicker",
+            Constants.PropertyEditors.Aliases.MemberGroupPicker => "Umb.PropertyEditorUi.MemberGroupPicker",
+            Constants.PropertyEditors.Aliases.MultiNodeTreePicker => "Umb.PropertyEditorUi.ContentPicker",
+            Constants.PropertyEditors.Aliases.MultipleTextstring => "Umb.PropertyEditorUi.MultipleTextString",
+            Constants.PropertyEditors.Aliases.Label => "Umb.PropertyEditorUi.Label",
+            Constants.PropertyEditors.Aliases.RadioButtonList => "Umb.PropertyEditorUi.RadioButtonList",
+            Constants.PropertyEditors.Aliases.Slider => "Umb.PropertyEditorUi.Slider",
+            Constants.PropertyEditors.Aliases.Tags => "Umb.PropertyEditorUi.Tags",
+            Constants.PropertyEditors.Aliases.TextBox => "Umb.PropertyEditorUi.TextBox",
+            Constants.PropertyEditors.Aliases.TextArea => "Umb.PropertyEditorUi.TextArea",
+            Constants.PropertyEditors.Aliases.RichText => "Umb.PropertyEditorUi.TinyMCE",
             "Umbraco.TinyMCE" => "Umb.PropertyEditorUi.TinyMCE",
-			Constants.PropertyEditors.Aliases.Boolean => "Umb.PropertyEditorUi.Toggle",
-			Constants.PropertyEditors.Aliases.MarkdownEditor => "Umb.PropertyEditorUi.MarkdownEditor",
-			Constants.PropertyEditors.Aliases.UserPicker => "Umb.PropertyEditorUi.UserPicker",
-			Constants.PropertyEditors.Aliases.UploadField => "Umb.PropertyEditorUi.UploadField",
-			Constants.PropertyEditors.Aliases.EmailAddress => "Umb.PropertyEditorUi.EmailAddress",
-			Constants.PropertyEditors.Aliases.MultiUrlPicker => "Umb.PropertyEditorUi.MultiUrlPicker",
-			_ => null
-		};
-	}
+            Constants.PropertyEditors.Aliases.Boolean => "Umb.PropertyEditorUi.Toggle",
+            Constants.PropertyEditors.Aliases.MarkdownEditor => "Umb.PropertyEditorUi.MarkdownEditor",
+            Constants.PropertyEditors.Aliases.UserPicker => "Umb.PropertyEditorUi.UserPicker",
+            Constants.PropertyEditors.Aliases.UploadField => "Umb.PropertyEditorUi.UploadField",
+            Constants.PropertyEditors.Aliases.EmailAddress => "Umb.PropertyEditorUi.EmailAddress",
+            Constants.PropertyEditors.Aliases.MultiUrlPicker => "Umb.PropertyEditorUi.MultiUrlPicker",
+            _ => null
+        };
+    }
 }

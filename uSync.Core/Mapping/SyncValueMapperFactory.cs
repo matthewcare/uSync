@@ -13,7 +13,7 @@ public static class SyncValueMapperCollectionExtensions
     public static async Task<IEnumerable<uSyncDependency>> GetDependenciesAsync(
         this SyncValueMapperCollection mapperCollection,
         object value, string editorAlias, DependencyFlags flags)
-    { 
+    {
         var mappers = mapperCollection.GetSyncMappers(editorAlias);
         if (!mappers.Any()) return [];
 

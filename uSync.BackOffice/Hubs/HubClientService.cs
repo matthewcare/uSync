@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR;
 
-using Microsoft.AspNetCore.SignalR;
+using System;
 
 using uSync.BackOffice.Models;
 
@@ -50,9 +50,9 @@ public class HubClientService
 
         var client = _hubContext.Clients.Client(_clientId);
         if (client == null) return;
-        
+
         client.SendAsync("Update", message).Wait();
-        return;       
+        return;
     }
 
     /// <summary>

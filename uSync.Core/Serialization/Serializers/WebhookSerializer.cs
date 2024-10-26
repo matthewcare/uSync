@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
@@ -20,228 +16,228 @@ namespace uSync.Core.Serialization.Serializers;
 [SyncSerializer("ED18C89D-A9FF-4217-9F8E-6898CA63ED81", "Webhook Serializer", uSyncConstants.Serialization.Webhook, IsTwoPass = false)]
 public class WebhookSerializer : SyncSerializerBase<IWebhook>, ISyncSerializer<IWebhook>
 {
-	private readonly IWebhookService _webhookService;
+    private readonly IWebhookService _webhookService;
 
-	public WebhookSerializer(
-		IEntityService entityService,
-		ILogger<SyncSerializerBase<IWebhook>> logger,
-		IWebhookService webhookService) 
-		: base(entityService, logger)
-	{
-		_webhookService = webhookService;
-	}
+    public WebhookSerializer(
+        IEntityService entityService,
+        ILogger<SyncSerializerBase<IWebhook>> logger,
+        IWebhookService webhookService)
+        : base(entityService, logger)
+    {
+        _webhookService = webhookService;
+    }
 
     /// <inheritdoc/>
     public override async Task DeleteItemAsync(IWebhook item)
-		=> await _webhookService.DeleteAsync(item.Key);
+        => await _webhookService.DeleteAsync(item.Key);
 
     /// <inheritdoc/>
     public override async Task<IWebhook?> FindItemAsync(Guid key)
-		=> await _webhookService.GetAsync(key);
+        => await _webhookService.GetAsync(key);
 
     public override async Task<IWebhook?> FindItemAsync(string alias)
     {
-		if (Guid.TryParse(alias, out Guid key))
-			return await FindItemAsync(key);
+        if (Guid.TryParse(alias, out Guid key))
+            return await FindItemAsync(key);
 
-		return null;
-	}
+        return null;
+    }
 
-	/// <inheritdoc/>
-	public override string ItemAlias(IWebhook item)
-		=> item.Key.ToString();
+    /// <inheritdoc/>
+    public override string ItemAlias(IWebhook item)
+        => item.Key.ToString();
 
     /// <inheritdoc/>
     /// 
-    public override async Task SaveItemAsync(IWebhook item)   
-		=> _ = 	item.HasIdentity? await _webhookService.UpdateAsync(item) : await _webhookService.CreateAsync(item);
+    public override async Task SaveItemAsync(IWebhook item)
+        => _ = item.HasIdentity ? await _webhookService.UpdateAsync(item) : await _webhookService.CreateAsync(item);
 
     /// <inheritdoc/>
     protected override async Task<SyncAttempt<IWebhook>> DeserializeCoreAsync(XElement node, SyncSerializerOptions options)
-	{ 
-		var key = node.GetKey();
-		var alias = node.GetAlias();
+    {
+        var key = node.GetKey();
+        var alias = node.GetAlias();
 
-		var details = new List<uSyncChange>();
+        var details = new List<uSyncChange>();
 
-		var item = await FindItemAsync(key);	
-		if (item == null)
-		{
-			// try and find by url/etc???
-		}
+        var item = await FindItemAsync(key);
+        if (item == null)
+        {
+            // try and find by url/etc???
+        }
 
-		var url = node.Element("Url").ValueOrDefault(string.Empty);
+        var url = node.Element("Url").ValueOrDefault(string.Empty);
 
-		if (item == null)
-		{
-			item = new Webhook(url);
-		}
-		
-		if (item.Key != key)
-		{
-			details.AddUpdate("Key", item.Key, key);
-			item.Key = key;
-		}
+        if (item == null)
+        {
+            item = new Webhook(url);
+        }
 
-		if (item.Url != url)
-		{
-			details.AddUpdate("Url", item.Url, url);
-			item.Url = url;
-		}
+        if (item.Key != key)
+        {
+            details.AddUpdate("Key", item.Key, key);
+            item.Key = key;
+        }
 
-		details.AddRange(DeserializeContentKeys(item, node));
-		details.AddRange(DeserializeEvents(item, node));
-		details.AddRange(DeserializeHeaders(item, node));
+        if (item.Url != url)
+        {
+            details.AddUpdate("Url", item.Url, url);
+            item.Url = url;
+        }
 
-		return SyncAttempt<IWebhook>.Succeed(node.GetAlias(), item, ChangeType.Import, details);
-	}
-	
-	private static List<uSyncChange> DeserializeContentKeys(IWebhook item, XElement node)
-	{
-		var details = new List<uSyncChange>();
+        details.AddRange(DeserializeContentKeys(item, node));
+        details.AddRange(DeserializeEvents(item, node));
+        details.AddRange(DeserializeHeaders(item, node));
 
-		var keys = node.Element("ContentTypeKeys");
-		if (keys == null) return details;
+        return SyncAttempt<IWebhook>.Succeed(node.GetAlias(), item, ChangeType.Import, details);
+    }
 
-		List<Guid> newKeys = [];
+    private static List<uSyncChange> DeserializeContentKeys(IWebhook item, XElement node)
+    {
+        var details = new List<uSyncChange>();
 
-		foreach (var key in keys.Elements("Key"))
-		{
-			var keyValue = key.ValueOrDefault(Guid.Empty);
-			if (keyValue == Guid.Empty) continue;
-			newKeys.Add(keyValue);
-		}
+        var keys = node.Element("ContentTypeKeys");
+        if (keys == null) return details;
 
-		var newOrderedKeys = newKeys.Order().ToArray();
-		var existingOrderedKeys = item.ContentTypeKeys.Order().ToArray();
+        List<Guid> newKeys = [];
 
-		if (existingOrderedKeys.Equals(newOrderedKeys) is false)
-		{
-			details.AddUpdate("ContentTypeKeys", 
-				string.Join(",", existingOrderedKeys),
-				string.Join(",", newOrderedKeys)
-				, "/");
-			item.ContentTypeKeys = newOrderedKeys;
-		}
+        foreach (var key in keys.Elements("Key"))
+        {
+            var keyValue = key.ValueOrDefault(Guid.Empty);
+            if (keyValue == Guid.Empty) continue;
+            newKeys.Add(keyValue);
+        }
 
-		return details;
+        var newOrderedKeys = newKeys.Order().ToArray();
+        var existingOrderedKeys = item.ContentTypeKeys.Order().ToArray();
 
-	}
+        if (existingOrderedKeys.Equals(newOrderedKeys) is false)
+        {
+            details.AddUpdate("ContentTypeKeys",
+                string.Join(",", existingOrderedKeys),
+                string.Join(",", newOrderedKeys)
+                , "/");
+            item.ContentTypeKeys = newOrderedKeys;
+        }
 
-	private static List<uSyncChange> DeserializeEvents(IWebhook item, XElement node)
-	{
-		var details = new List<uSyncChange>();
+        return details;
 
-		var keys = node.Element("Events");
-		if (keys == null) return details;
+    }
 
-		List<string> newKeys = [];
+    private static List<uSyncChange> DeserializeEvents(IWebhook item, XElement node)
+    {
+        var details = new List<uSyncChange>();
 
-		foreach (var eventNode in keys.Elements("Event"))
-		{
-			var eventValue = eventNode.ValueOrDefault(string.Empty);
-			if (eventValue == string.Empty) continue;
-			newKeys.Add(eventValue);
-		}
+        var keys = node.Element("Events");
+        if (keys == null) return details;
 
-		var newOrderedEvents = newKeys.Order().ToArray();
-		var existingOrderedEvents = item.Events.Order().ToArray();
+        List<string> newKeys = [];
 
-		if (existingOrderedEvents.Equals(newOrderedEvents) is false)
-		{
-			details.AddUpdate("Events", 
-				string.Join(",", existingOrderedEvents),
-				string.Join(",", newOrderedEvents)
-				, "/");
-			item.Events = newOrderedEvents;
-		}
+        foreach (var eventNode in keys.Elements("Event"))
+        {
+            var eventValue = eventNode.ValueOrDefault(string.Empty);
+            if (eventValue == string.Empty) continue;
+            newKeys.Add(eventValue);
+        }
 
-		return details;
-	}
+        var newOrderedEvents = newKeys.Order().ToArray();
+        var existingOrderedEvents = item.Events.Order().ToArray();
 
-	private static List<uSyncChange> DeserializeHeaders(IWebhook item, XElement node)
-	{
-		var details = new List<uSyncChange>();
+        if (existingOrderedEvents.Equals(newOrderedEvents) is false)
+        {
+            details.AddUpdate("Events",
+                string.Join(",", existingOrderedEvents),
+                string.Join(",", newOrderedEvents)
+                , "/");
+            item.Events = newOrderedEvents;
+        }
 
-		var keys = node.Element("Headers");
-		if (keys == null) return details;
+        return details;
+    }
 
-		Dictionary<string, string> newHeaders = new();
+    private static List<uSyncChange> DeserializeHeaders(IWebhook item, XElement node)
+    {
+        var details = new List<uSyncChange>();
 
-		foreach (var header in keys.Elements("Header"))
-		{
-			var headerKey = header.Attribute("Key").ValueOrDefault(string.Empty);
-			var headerValue = header.ValueOrDefault(string.Empty);
+        var keys = node.Element("Headers");
+        if (keys == null) return details;
 
-			if (headerKey == string.Empty) continue;
-			if (newHeaders.ContainsKey(headerKey)) continue; // stop duplicates.
-			newHeaders.Add(headerKey, headerValue);
-		}
+        Dictionary<string, string> newHeaders = new();
 
-		var existingOrderedEvents = item.Headers.OrderBy(x => x.Key).ToDictionary();
-		var newOrderedHeaders = newHeaders.OrderBy(x => x.Key).ToDictionary();
+        foreach (var header in keys.Elements("Header"))
+        {
+            var headerKey = header.Attribute("Key").ValueOrDefault(string.Empty);
+            var headerValue = header.ValueOrDefault(string.Empty);
 
-		if (existingOrderedEvents.Equals(newOrderedHeaders) is false)
-		{
-			details.AddUpdate("Events", 
-				string.Join(",", existingOrderedEvents),
-				string.Join(",", newOrderedHeaders)
-				, "/");
-			item.Headers = newOrderedHeaders;
-		}
+            if (headerKey == string.Empty) continue;
+            if (newHeaders.ContainsKey(headerKey)) continue; // stop duplicates.
+            newHeaders.Add(headerKey, headerValue);
+        }
 
-		return details;
-	}
+        var existingOrderedEvents = item.Headers.OrderBy(x => x.Key).ToDictionary();
+        var newOrderedHeaders = newHeaders.OrderBy(x => x.Key).ToDictionary();
+
+        if (existingOrderedEvents.Equals(newOrderedHeaders) is false)
+        {
+            details.AddUpdate("Events",
+                string.Join(",", existingOrderedEvents),
+                string.Join(",", newOrderedHeaders)
+                , "/");
+            item.Headers = newOrderedHeaders;
+        }
+
+        return details;
+    }
 
     protected override Task<SyncAttempt<XElement>> SerializeCoreAsync(IWebhook item, SyncSerializerOptions options)
-	{
-		return uSyncTaskHelper.FromResultOf(() =>
-		{
+    {
+        return uSyncTaskHelper.FromResultOf(() =>
+        {
 
-			var node = InitializeBaseNode(item, item.Url);
+            var node = InitializeBaseNode(item, item.Url);
 
-			node.Add(new XElement("Url", item.Url));
-			node.Add(new XElement("Enabled", item.Enabled));
+            node.Add(new XElement("Url", item.Url));
+            node.Add(new XElement("Enabled", item.Enabled));
 
-			node.Add(SerializeContentKeys(item));
-			node.Add(SerializeEvents(item));
-			node.Add(SerializeHeaders(item));
+            node.Add(SerializeContentKeys(item));
+            node.Add(SerializeEvents(item));
+            node.Add(SerializeHeaders(item));
 
-			return SyncAttempt<XElement>.Succeed(item.Url, node, typeof(IWebhook), ChangeType.Export);
-		});		
-	}
+            return SyncAttempt<XElement>.Succeed(item.Url, node, typeof(IWebhook), ChangeType.Export);
+        });
+    }
 
-	private static XElement SerializeContentKeys(IWebhook item)
-	{
-		var keysNode = new XElement("ContentTypeKeys");
-		foreach (var contentTypeKey in item.ContentTypeKeys.Order())
-		{
-			keysNode.Add(new XElement("Key", contentTypeKey));
-		}
+    private static XElement SerializeContentKeys(IWebhook item)
+    {
+        var keysNode = new XElement("ContentTypeKeys");
+        foreach (var contentTypeKey in item.ContentTypeKeys.Order())
+        {
+            keysNode.Add(new XElement("Key", contentTypeKey));
+        }
 
-		return keysNode;
-	}
+        return keysNode;
+    }
 
-	private static XElement SerializeEvents(IWebhook item)
-	{
-		var eventsNode = new XElement("Events");
-		foreach(var eventItem in item.Events.Order())
-		{
-			eventsNode.Add(new XElement("Event", eventItem));
-		}
-		return eventsNode;
-	}
+    private static XElement SerializeEvents(IWebhook item)
+    {
+        var eventsNode = new XElement("Events");
+        foreach (var eventItem in item.Events.Order())
+        {
+            eventsNode.Add(new XElement("Event", eventItem));
+        }
+        return eventsNode;
+    }
 
-	private static XElement SerializeHeaders(IWebhook item)
-	{
-		var headerNode = new XElement("Headers");
-		foreach(var headerItem in item.Headers.OrderBy(x => x.Key))
-		{
-			headerNode.Add(new XElement("Header",
-				 new XAttribute("Key", headerItem.Key),
-				 new XCData(headerItem.Value)));
-		}
+    private static XElement SerializeHeaders(IWebhook item)
+    {
+        var headerNode = new XElement("Headers");
+        foreach (var headerItem in item.Headers.OrderBy(x => x.Key))
+        {
+            headerNode.Add(new XElement("Header",
+                 new XAttribute("Key", headerItem.Key),
+                 new XCData(headerItem.Value)));
+        }
 
-		return headerNode;
-	}
+        return headerNode;
+    }
 }

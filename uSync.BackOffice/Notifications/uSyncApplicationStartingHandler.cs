@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Events;
@@ -16,7 +15,6 @@ using Umbraco.Extensions;
 
 using uSync.BackOffice.Configuration;
 using uSync.BackOffice.Services;
-using uSync.BackOffice.SyncHandlers;
 using uSync.BackOffice.SyncHandlers.Models;
 
 namespace uSync.BackOffice.Notifications;
@@ -102,7 +100,7 @@ internal class uSyncApplicationStartingHandler : INotificationAsyncHandler<Umbra
 
                     _logger.LogInformation("uSync: Running export at startup");
 
-                    
+
                     _uSyncService.StartupExportAsync(_uSyncConfig.GetWorkingFolder(), options).Wait();
                 }
 

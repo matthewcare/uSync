@@ -1,6 +1,4 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -64,12 +62,12 @@ public static class uSyncActionExtensions
         return summary;
     }
 
-	/// <summary>
-	///  try to find an action in the list based on key, and handler alias
-	/// </summary>
-	public static bool TryFindAction(this IEnumerable<uSyncAction> actions, Guid key, string handlerAlias, out uSyncAction action)
-	{
-		action = actions.FirstOrDefault(x => $"{x.Key}_{x.HandlerAlias}" == $"{key}_{handlerAlias}", new uSyncAction { Key = Guid.Empty });
-		return action.Key != Guid.Empty;
-	}
+    /// <summary>
+    ///  try to find an action in the list based on key, and handler alias
+    /// </summary>
+    public static bool TryFindAction(this IEnumerable<uSyncAction> actions, Guid key, string handlerAlias, out uSyncAction action)
+    {
+        action = actions.FirstOrDefault(x => $"{x.Key}_{x.HandlerAlias}" == $"{key}_{handlerAlias}", new uSyncAction { Key = Guid.Empty });
+        return action.Key != Guid.Empty;
+    }
 }

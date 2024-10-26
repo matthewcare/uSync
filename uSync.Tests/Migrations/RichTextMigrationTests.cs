@@ -1,14 +1,15 @@
 ﻿using NUnit.Framework;
+
 using uSync.Core.DataTypes.DataTypeSerializers;
 
 namespace uSync.Tests.Migrations;
 
 [TestFixture]
-internal class RichTextMigrationTests: MigrationTestBase
+internal class RichTextMigrationTests : MigrationTestBase
 {
-	private RichTextEditorMigratingSerializer _serializer = new();
+    private RichTextEditorMigratingSerializer _serializer = new();
 
-	private static string Source = @"{
+    private static string Source = @"{
   ""Blocks"": [
     {
       ""backgroundColor"": null,
@@ -58,7 +59,7 @@ internal class RichTextMigrationTests: MigrationTestBase
   ""OverlaySize"": ""medium"",
   ""UseLiveEditing"": false
 }";
-	
+
     private static string Target = @"{
   ""blocks"": [
     {
@@ -108,12 +109,12 @@ internal class RichTextMigrationTests: MigrationTestBase
   ""useLiveEditing"": false
 }";
 
-	[Test]
-	public void RichTextMigrationValueTest()
-		=> TestSerializerPropertyMigration(_serializer, Source, Target);
+    [Test]
+    public void RichTextMigrationValueTest()
+        => TestSerializerPropertyMigration(_serializer, Source, Target);
 
-	[Test]
-	public void RichTextMigratedValueTest()
-		=> TestSerializerPropertyMigration(_serializer, Target, Target);
+    [Test]
+    public void RichTextMigratedValueTest()
+        => TestSerializerPropertyMigration(_serializer, Target, Target);
 
 }

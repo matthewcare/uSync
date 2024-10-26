@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models.Entities;
@@ -123,11 +123,11 @@ public abstract class SyncTreeSerializerBase<TObject> : SyncSerializerBase<TObje
     [Obsolete("Use FindItemAsync will be removed in v16")]
     protected virtual Attempt<TObject?> FindOrCreate(XElement node)
         => FindOrCreateAsync(node).Result;
-    
+
     [Obsolete("Use FindItemAsync will be removed in v16")]
     protected TObject? FindItem(Guid key, string alias)
         => FindItemAsync(key, alias).Result;
-    
+
     [Obsolete("Use HasParentItemAsync will be removed in v16")]
     protected virtual bool HasParentItem(XElement node)
         => true;

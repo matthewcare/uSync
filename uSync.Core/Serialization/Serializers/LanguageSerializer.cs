@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Globalization;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
@@ -158,7 +158,7 @@ public class LanguageSerializer : SyncSerializerBase<ILanguage>, ISyncSerializer
 
         if (string.IsNullOrEmpty(item.FallbackIsoCode) is false)
         {
-            var fallback = await  _languageService.GetAsync(item.FallbackIsoCode);
+            var fallback = await _languageService.GetAsync(item.FallbackIsoCode);
             if (fallback != null)
             {
                 node.Add(new XElement("Fallback", fallback.IsoCode));

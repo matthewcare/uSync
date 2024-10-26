@@ -70,7 +70,7 @@ internal class SyncActionService : ISyncActionService
             Folders = options.GetFoldersOrDefault(_uSyncConfig.GetFolders()).Select(MakeValidImportFolder).ToArray()
         };
 
-		var actions = (await _uSyncService.ReportHandlerAsync(options.Handler, importOptions)).ToList();
+        var actions = (await _uSyncService.ReportHandlerAsync(options.Handler, importOptions)).ToList();
 
         if (_uSyncConfig.Settings.SummaryDashboard || actions.Count > _uSyncConfig.Settings.SummaryLimit)
             actions = actions.ConvertToSummary(_uSyncConfig.Settings.SummaryDashboard).ToList();
@@ -86,7 +86,7 @@ internal class SyncActionService : ISyncActionService
         {
             Callbacks = callbacks,
             HandlerSet = options.GetSetOrDefault(_uSyncConfig.Settings.DefaultSet),
-            Folders =  options.GetFoldersOrDefault(_uSyncConfig.GetFolders()),
+            Folders = options.GetFoldersOrDefault(_uSyncConfig.GetFolders()),
             PauseDuringImport = true,
             Flags = options.GetImportFlags()
         };
@@ -101,7 +101,7 @@ internal class SyncActionService : ISyncActionService
 
     public async Task<SyncActionResult> ImportPostAsync(SyncActionOptions options, uSyncCallbacks? callbacks)
     {
-		var actions = await _uSyncService.PerformPostImportAsync(
+        var actions = await _uSyncService.PerformPostImportAsync(
             options.GetFoldersOrDefault(_uSyncConfig.GetFolders()),
             options.GetSetOrDefault(_uSyncConfig.Settings.DefaultSet),
             options.Actions);
@@ -151,7 +151,7 @@ internal class SyncActionService : ISyncActionService
         var fullRoot = _syncFileService.GetAbsPath(_uSyncConfig.GetWorkingFolder());
 
         var rootParent = Path.GetDirectoryName(fullRoot.TrimEnd(['/', '\\']));
-        
+
         // _logger.LogDebug("Import Folder: {fullPath} {rootPath} {fullRoot}", fullPath, rootParent, fullRoot);
 
         if (rootParent is not null && fullPath.StartsWith(rootParent))

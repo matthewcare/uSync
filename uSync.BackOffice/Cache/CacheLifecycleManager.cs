@@ -1,9 +1,9 @@
 ﻿
+using Microsoft.Extensions.Logging;
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Notifications;

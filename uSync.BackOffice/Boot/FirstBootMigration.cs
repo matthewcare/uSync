@@ -1,14 +1,9 @@
-﻿
-using System;
-using System.Diagnostics;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core.Web;
 using Umbraco.Cms.Infrastructure.Migrations;
 
 using uSync.BackOffice.Configuration;
-using uSync.BackOffice.SyncHandlers;
 
 namespace uSync.BackOffice.Boot;
 
@@ -23,7 +18,7 @@ public class FirstBootMigrationPlan : MigrationPlan
     {
         From(string.Empty)
                 .To<FirstBootMigration>("FirstBoot-Migration")
-                .To<LogViewerMigration>("LogViewer-Migration");                
+                .To<LogViewerMigration>("LogViewer-Migration");
     }
 }
 

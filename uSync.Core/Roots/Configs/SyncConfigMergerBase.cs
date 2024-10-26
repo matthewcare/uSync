@@ -68,8 +68,8 @@ internal class SyncConfigMergerBase
 
     protected static JsonArray? GetJsonArrayDifferences(JsonArray? sourceArray, JsonArray? targetArray, string key, string removeProperty)
     {
-		// if target is blank the difference is nothing?
-		if (targetArray is null) return [];
+        // if target is blank the difference is nothing?
+        if (targetArray is null) return [];
 
         var sourceItems = sourceArray?
             .Select(x => x as JsonObject)?
@@ -84,8 +84,8 @@ internal class SyncConfigMergerBase
         // things that are only in the target. 
         var targetOnly = targetItems.Where(x => sourceItems.ContainsKey(x.Key) is false).Select(x => x.Value).ToList() ?? [];
 
-		// keys that are only in the source have been removed from the child, we need to mark them as removed. 
-		foreach(var removedItem in sourceItems.Where(x => targetItems.ContainsKey(x.Key) is false))
+        // keys that are only in the source have been removed from the child, we need to mark them as removed. 
+        foreach (var removedItem in sourceItems.Where(x => targetItems.ContainsKey(x.Key) is false))
         {
             if (removedItem.Value.ContainsKey(removeProperty))
                 removedItem.Value[removeProperty] = _removedLabel;
@@ -94,7 +94,7 @@ internal class SyncConfigMergerBase
         }
 
         return [.. targetOnly];
-	}
+    }
 
     protected static JsonArray? MergeJsonArrays(JsonArray? sourceArray, JsonArray? targetArray, string key, string removeProperty)
     {
@@ -105,7 +105,7 @@ internal class SyncConfigMergerBase
         if (targetArray is null) return sourceArray;
 
         // merge them. 
-		foreach (var sourceItem in sourceArray)
+        foreach (var sourceItem in sourceArray)
         {
             var sourceObject = sourceItem as JsonObject;
             if (sourceObject is null) continue;
@@ -118,11 +118,11 @@ internal class SyncConfigMergerBase
             {
                 var clonedItem = sourceObject.SerializeJsonString().DeserializeJson<JsonObject>();
                 targetArray.Add(clonedItem);
-			}
+            }
         }
 
         // removals. 
-        foreach(var targetItem in targetArray)
+        foreach (var targetItem in targetArray)
         {
             var targetObject = targetItem as JsonObject;
             if (targetObject is null) continue;
@@ -133,8 +133,8 @@ internal class SyncConfigMergerBase
             {
                 // remove it. 
                 targetArray.Remove(targetItem);
-			}
-		}
+            }
+        }
 
         return targetArray;
     }

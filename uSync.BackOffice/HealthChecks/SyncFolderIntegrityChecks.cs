@@ -110,11 +110,11 @@ public class SyncFolderIntegrityChecks : HealthCheck
 
                     if (_keys.TryGetValue(key, out string? value))
                     {
-						clashes.Add($"<li>Clash [{filePath}] shares an id with [{value}]</li>");
-					}
-					else
+                        clashes.Add($"<li>Clash [{filePath}] shares an id with [{value}]</li>");
+                    }
+                    else
                     {
-						_keys[key] = filePath;
+                        _keys[key] = filePath;
                     }
                 }
             }

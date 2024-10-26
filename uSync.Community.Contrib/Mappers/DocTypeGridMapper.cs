@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
@@ -55,7 +54,7 @@ public class DocTypeGridMapper : SyncNestedValueMapperBase, ISyncMapper
 
     public override string Name => "DocType Grid Mapper";
 
-    public override string[] Editors => [ "Umbraco.Grid.docType", "Umbraco.Grid.doctypegrideditor" ];
+    public override string[] Editors => ["Umbraco.Grid.docType", "Umbraco.Grid.doctypegrideditor"];
 
     /// <summary>
     ///  Get any formatted export values. 
@@ -72,7 +71,7 @@ public class DocTypeGridMapper : SyncNestedValueMapperBase, ISyncMapper
         var jsonValue = GetJsonValue(value);
         if (jsonValue == null) return value.ToString() ?? string.Empty;
 
-        var docType =  await GetDocTypeAsync(jsonValue, this.docTypeAliasValue);
+        var docType = await GetDocTypeAsync(jsonValue, this.docTypeAliasValue);
         if (docType == null) return value.ToString() ?? string.Empty;
 
         // JArray of values 
@@ -88,7 +87,7 @@ public class DocTypeGridMapper : SyncNestedValueMapperBase, ISyncMapper
         return jsonValue.SerializeJsonString(true);
     }
 
-    
+
     private async Task<JsonObject> GetExportJsonValuesAsync(JsonObject item, IContentType docType)
     {
         foreach (var property in docType.CompositionPropertyTypes)

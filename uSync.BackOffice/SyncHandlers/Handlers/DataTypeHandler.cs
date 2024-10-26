@@ -1,10 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
@@ -22,7 +21,6 @@ using uSync.BackOffice.Services;
 using uSync.BackOffice.SyncHandlers.Interfaces;
 using uSync.BackOffice.SyncHandlers.Models;
 using uSync.Core;
-using uSync.Core.Models;
 using uSync.Core.Serialization;
 
 using static Umbraco.Cms.Core.Constants;
@@ -44,7 +42,7 @@ public class DataTypeHandler : SyncHandlerContainerBase<IDataType>, ISyncHandler
     INotificationAsyncHandler<MovingNotification<IDataType>>,
     INotificationAsyncHandler<DeletingNotification<IDataType>>
 {
- 
+
     private readonly IDataTypeService dataTypeService;
     private readonly IDataTypeContainerService _dataTypeContainerService;
 
@@ -87,7 +85,7 @@ public class DataTypeHandler : SyncHandlerContainerBase<IDataType>, ISyncHandler
         if (actions == null || !actions.Any()) return [];
 
         var results = new List<uSyncAction>();
-        var options = new uSyncImportOptions {  Flags = SerializerFlags.LastPass };
+        var options = new uSyncImportOptions { Flags = SerializerFlags.LastPass };
 
         // we only do deletes here. 
         foreach (var action in actions.Where(x => x.Change == ChangeType.Hidden))

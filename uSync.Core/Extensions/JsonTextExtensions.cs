@@ -3,11 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
-using Org.BouncyCastle.Bcpg.Sig;
-
-using Umbraco.Cms.Core.Security;
 using Umbraco.Cms.Infrastructure.Serialization;
 using Umbraco.Extensions;
 
@@ -23,25 +18,25 @@ public static class JsonTextExtensions
     internal static readonly JsonSerializerOptions _defaultOptions = new()
     {
         WriteIndented = true,
-		NumberHandling = JsonNumberHandling.AllowReadingFromString,
-		PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString,
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         PropertyNameCaseInsensitive = true,
         TypeInfoResolver = new OrderedPropertiesJsonResolver(),
-		Converters =
-		{
-			new JsonStringEnumConverter(),
-			new JsonObjectConverter(),
-			new JsonUdiConverter(),
-			new JsonUdiRangeConverter(),
-			new JsonBooleanConverter(),
+        Converters =
+        {
+            new JsonStringEnumConverter(),
+            new JsonObjectConverter(),
+            new JsonUdiConverter(),
+            new JsonUdiRangeConverter(),
+            new JsonBooleanConverter(),
             new JsonXElementConverter(),
         }
-	};
+    };
 
     internal static readonly JsonSerializerOptions _flatOptions = new(_defaultOptions)
     {
         WriteIndented = false,
-	};
+    };
 
     private static JsonNodeOptions _nodeOptions = new()
     {
@@ -477,22 +472,22 @@ public static class JsonTextExtensions
 
         return default;
     }
-	#endregion
+    #endregion
 
-	#region Comparasions 
+    #region Comparasions 
 
 
-	/// <summary>
-	///  tells us if the json for an object is equal, helps when the config objects don't have their
-	///  own Equals functions
-	/// </summary>
-	public static bool IsJsonEqual(this object currentObject, object newObject)
-	{
-		var currentString = currentObject.SerializeJsonString(false);
-		var newString = newObject.SerializeJsonString(false);
-		return currentString == newString;
-	}
+    /// <summary>
+    ///  tells us if the json for an object is equal, helps when the config objects don't have their
+    ///  own Equals functions
+    /// </summary>
+    public static bool IsJsonEqual(this object currentObject, object newObject)
+    {
+        var currentString = currentObject.SerializeJsonString(false);
+        var newString = newObject.SerializeJsonString(false);
+        return currentString == newString;
+    }
 
-	#endregion
+    #endregion
 
 }

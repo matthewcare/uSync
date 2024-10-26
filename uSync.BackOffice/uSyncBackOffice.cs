@@ -1,7 +1,5 @@
 ﻿using System;
 
-using Umbraco.Cms.Core.Semver;
-
 namespace uSync.BackOffice;
 
 /// <summary>

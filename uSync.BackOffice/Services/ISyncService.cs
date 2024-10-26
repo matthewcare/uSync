@@ -33,7 +33,7 @@ public interface ISyncService
     /// <summary>
     ///  decompress (unzip) an archive and put it on disk to be imported
     /// </summary>
-    void DeCompressFile(string zipArchive, string target);  
+    void DeCompressFile(string zipArchive, string target);
 
     /// <summary>
     ///  run the export for a given folder
@@ -44,7 +44,7 @@ public interface ISyncService
     ///  export a handler to a folder based on the provided options
     /// </summary>
     Task<IEnumerable<uSyncAction>> ExportHandlerAsync(string handler, uSyncImportOptions options);
-    
+
     /// <summary>
     ///  does the given folder contain any uSync files for content items? 
     /// </summary>
@@ -197,7 +197,7 @@ public interface ISyncService
     IEnumerable<uSyncAction> Report(string folder, IEnumerable<string> handlerAliases, uSyncCallbacks? callbacks);
     [Obsolete("use ReportHandlerAsync will be removed in v16")]
     IEnumerable<uSyncAction> Report(string folder, SyncHandlerOptions handlerOptions, uSyncCallbacks? callbacks = null);
-   
+
     [Obsolete("use ReportHandlerAsync will be removed in v16")]
     IEnumerable<uSyncAction> ReportHandler(string handler, uSyncImportOptions options)
         => ReportHandlerAsync(handler, options).Result;

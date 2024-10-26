@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Microsoft.Extensions.Logging;
-
 using Umbraco.Cms.Core.Cache;
-using Umbraco.Cms.Core.Media;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Entities;
 using Umbraco.Cms.Core.Services;
@@ -169,7 +168,7 @@ public abstract class SyncHandlerBase<TObject>
 
         return actions;
     }
-  
+
     protected override async Task<IEnumerable<IEntity>> GetChildItemsAsync(IEntity? parent)
         => await GetChildItemsAsync(parent?.Key ?? Guid.Empty);
 
@@ -189,7 +188,7 @@ public abstract class SyncHandlerBase<TObject>
     {
         var entity = entityService.Get(parent);
         if (entity is null) return [];
-        
+
         return GetChildItemsAsync(entity.Key).Result;
     }
 
@@ -272,7 +271,7 @@ public abstract class SyncHandlerBase<TObject>
     {
         if (this.ItemContainerType == UmbracoObjectTypes.Unknown)
             return await Task.FromResult(Enumerable.Empty<IEntity>());
-        
+
         return await Task.FromResult<IEnumerable<IEntity>>(entityService.GetChildren(key != Guid.Empty ? key : null, this.ItemContainerType));
     }
 

@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
@@ -108,7 +107,7 @@ public abstract class SyncHandlerContainerBase<TObject>
     [Obsolete("Delete by key - will be removed in v16")]
     virtual protected void DeleteFolder(int id) { }
 
-    abstract protected Task DeleteFolderAsync(Guid key);  
+    abstract protected Task DeleteFolderAsync(Guid key);
 
     public virtual async Task<IEnumerable<uSyncAction>> ProcessPostImportAsync(IEnumerable<uSyncAction> actions, HandlerSettings config)
     {
@@ -144,7 +143,7 @@ public abstract class SyncHandlerContainerBase<TObject>
     [Obsolete("Use UpdateFolderAsync (and pass a guid) will be removed in v16")]
     protected IEnumerable<uSyncAction> UpdateFolder(int folderId, string[] folders, HandlerSettings config)
         => [];
-    
+
     protected async Task<IEnumerable<uSyncAction>> UpdateFolderAsync(Guid folderKey, string[] folders, HandlerSettings config)
     {
         if (this.serializer is SyncContainerSerializerBase<TObject> containerSerializer)
@@ -204,7 +203,7 @@ public abstract class SyncHandlerContainerBase<TObject>
         // ProcessContainerChanges(notification.SavedEntities);
     }
 
-   
+
     public virtual async Task HandleAsync(EntityContainerRenamedNotification notification, CancellationToken cancellationToken)
     {
         if (!ShouldProcessEvent()) return;
@@ -280,8 +279,8 @@ public abstract class SyncHandlerContainerBase<TObject>
 
         if (renames.Any())
         {
-			results.RemoveAll(x => renames.Any(r => r.Key == x.Key));
-			results.AddRange(renames);
+            results.RemoveAll(x => renames.Any(r => r.Key == x.Key));
+            results.AddRange(renames);
         }
 
         return results;

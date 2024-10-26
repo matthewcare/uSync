@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using uSync.BackOffice.Configuration;
 using uSync.BackOffice.Legacy;
 
 namespace uSync.Backoffice.Management.Api.Controllers.Migrations;
@@ -41,29 +40,29 @@ public class uSyncMigrationController : uSyncControllerBase
     [HttpPost("IgnoreLegacy")]
     [ProducesResponseType<bool>(StatusCodes.Status200OK)]
     public async Task<bool> IgnoreLegacy()
-	{
-		if (_legacyService.TryGetLatestLegacyFolder(out var folder) && folder is not null)
-		{
-			await _legacyService.IgnoreLegacyFolderAsync(folder, "folder will not show up as legacy.");
-			return true;
-		}
+    {
+        if (_legacyService.TryGetLatestLegacyFolder(out var folder) && folder is not null)
+        {
+            await _legacyService.IgnoreLegacyFolderAsync(folder, "folder will not show up as legacy.");
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     [HttpPost("CopyLegacy")]
     [ProducesResponseType<bool>(StatusCodes.Status200OK)]
     public async Task<bool> CopyLegacy()
-	{
-		if (_legacyService.TryGetLatestLegacyFolder(out var folder) && folder is not null)
-		{
-			_legacyService.CopyLegacyFolder(folder);
+    {
+        if (_legacyService.TryGetLatestLegacyFolder(out var folder) && folder is not null)
+        {
+            _legacyService.CopyLegacyFolder(folder);
             await _legacyService.IgnoreLegacyFolderAsync(folder, $"folder has been copied to v{uSync.BackOffice.uSync.Version.Major} as latest");
-			return true;
-		}
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }
 
 public class SyncLegacyCheckResponse

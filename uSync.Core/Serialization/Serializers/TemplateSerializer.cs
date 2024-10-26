@@ -331,13 +331,14 @@ public class TemplateSerializer : SyncSerializerBase<ITemplate>, ISyncSerializer
 
         logger.LogDebug("Save Template {name} {alias} [{contentLength}] {userKey} {key}", item.Name, item.Alias, item.Content?.Length ?? 0, userKey, item.Key);
 
-        if (existing is null) {
+        if (existing is null)
+        {
             var result = await _templateService.CreateAsync(item.Name ?? item.Alias, item.Alias, item.Content, userKey, item.Key);
             logger.LogDebug("Create Template Result: [{key}] {result} {status}", result.Result.Key, result.Success, result.Status);
         }
         else
         {
-            var result = await  _templateService.UpdateAsync(item, userKey);
+            var result = await _templateService.UpdateAsync(item, userKey);
             logger.LogDebug("Update Template Result: [{key}] {result} {status}", item.Key, result.Success, result.Status);
         }
 
@@ -348,7 +349,7 @@ public class TemplateSerializer : SyncSerializerBase<ITemplate>, ISyncSerializer
 
     public override async Task SaveAsync(IEnumerable<ITemplate> items)
     {
-        foreach(var item in items)
+        foreach (var item in items)
             await SaveItemAsync(item);
     }
 

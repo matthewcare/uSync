@@ -5,7 +5,7 @@ namespace uSync.Backoffice.Management.Api.Models;
 
 public class uSyncActionView
 {
-    public required Guid Key { get;set; }
+    public required Guid Key { get; set; }
     public required string Name { get; set; }
     public required string Handler { get; set; }
     public required string ItemType { get; set; }

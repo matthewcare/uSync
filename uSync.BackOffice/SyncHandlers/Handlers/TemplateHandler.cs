@@ -51,7 +51,7 @@ public class TemplateHandler : SyncHandlerLevelBase<ITemplate>, ISyncHandler, IS
     public TemplateHandler(
         ILogger<TemplateHandler> logger,
         IEntityService entityService,
-        ITemplateService templateService,   
+        ITemplateService templateService,
         FileSystems fileSystems,
         ITemplateContentParserService templateContentParserService,
         AppCaches appCaches,
@@ -96,10 +96,10 @@ public class TemplateHandler : SyncHandlerLevelBase<ITemplate>, ISyncHandler, IS
 
             return [.. results.OrderBy(x => x.Level)];
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             logger.LogWarning(ex, "Error trying to sort the templates");
-            return items; 
+            return items;
         }
     }
 
@@ -127,7 +127,7 @@ public class TemplateHandler : SyncHandlerLevelBase<ITemplate>, ISyncHandler, IS
 
         var results = new List<uSyncAction>();
 
-        var options = new uSyncImportOptions {  Flags = SerializerFlags.LastPass };
+        var options = new uSyncImportOptions { Flags = SerializerFlags.LastPass };
 
         // we only do deletes here. 
         foreach (var action in actions.Where(x => x.Change == ChangeType.Hidden))

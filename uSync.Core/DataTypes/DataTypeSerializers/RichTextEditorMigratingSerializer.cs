@@ -3,7 +3,6 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 using Umbraco.Cms.Core;
-using Umbraco.Extensions;
 
 using uSync.Core.Extensions;
 
@@ -13,8 +12,8 @@ internal class RichTextEditorMigratingSerializer : ConfigurationSerializerBase, 
     public string Name => nameof(RichTextEditorMigratingSerializer);
 
     public string[] Editors => [
-		"Umbraco.TinyMCE",
-		Constants.PropertyEditors.Aliases.RichText
+        "Umbraco.TinyMCE",
+        Constants.PropertyEditors.Aliases.RichText
     ];
 
     /// <summary>
@@ -31,25 +30,25 @@ internal class RichTextEditorMigratingSerializer : ConfigurationSerializerBase, 
         return configuration.ToImmutableSortedDictionary();
     }
 
-	private IDictionary<string, object> FixMediaParent(IDictionary<string, object> configuration)
-	{
-		if (configuration.TryGetValue("mediaParentId", out var mediaParent) is false || mediaParent is null)
-			return configuration;
+    private IDictionary<string, object> FixMediaParent(IDictionary<string, object> configuration)
+    {
+        if (configuration.TryGetValue("mediaParentId", out var mediaParent) is false || mediaParent is null)
+            return configuration;
 
-		if (mediaParent is string mediaParentKey is false)
-			return configuration;
+        if (mediaParent is string mediaParentKey is false)
+            return configuration;
 
-		if (string.IsNullOrWhiteSpace(mediaParentKey)) return configuration;
+        if (string.IsNullOrWhiteSpace(mediaParentKey)) return configuration;
 
-		if (UdiParser.TryParse(mediaParentKey, out var mediaUdi) is false)
-			return configuration;
+        if (UdiParser.TryParse(mediaParentKey, out var mediaUdi) is false)
+            return configuration;
 
-		if (mediaUdi is GuidUdi guidUdi is false)
-			return configuration;
+        if (mediaUdi is GuidUdi guidUdi is false)
+            return configuration;
 
-		configuration["mediaParentId"] = guidUdi.Guid;
-		return configuration;
-	}
+        configuration["mediaParentId"] = guidUdi.Guid;
+        return configuration;
+    }
 
     private IDictionary<string, object> TopLevelEditor(IDictionary<string, object> configuration)
     {

@@ -1,7 +1,7 @@
 ﻿
-using System.Xml.Linq;
-
 using Microsoft.Extensions.Logging;
+
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.Entities;

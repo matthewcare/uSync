@@ -38,7 +38,7 @@ public class SyncXmlTracker<TObject>
         => GetChanges(target, new SyncSerializerOptions());
 
     [Obsolete("Use GetChangesAsync will be removed in v16")]
-    public IEnumerable<uSyncChange> GetChanges(XElement target, SyncSerializerOptions options) 
+    public IEnumerable<uSyncChange> GetChanges(XElement target, SyncSerializerOptions options)
         => GetChangesAsync(target, options).Result;
 
     public async Task<IEnumerable<uSyncChange>> GetChangesAsync(XElement target, SyncSerializerOptions options)

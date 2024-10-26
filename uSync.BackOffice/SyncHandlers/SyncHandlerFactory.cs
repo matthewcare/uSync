@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+
+using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
 
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-
-using Umbraco.Cms.Api.Management.ViewModels.RelationType.Item;
 using Umbraco.Extensions;
 
 using uSync.BackOffice.Configuration;

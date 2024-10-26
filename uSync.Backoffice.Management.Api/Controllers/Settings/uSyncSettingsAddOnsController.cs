@@ -1,11 +1,10 @@
-﻿using System.Diagnostics;
-
-using Asp.Versioning;
+﻿using Asp.Versioning;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Umbraco.Cms.Core.Semver;
+using System.Diagnostics;
 
+using Umbraco.Cms.Core.Semver;
 using Umbraco.Extensions;
 
 namespace uSync.Backoffice.Management.Api.Controllers.Settings;

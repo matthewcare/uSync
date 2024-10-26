@@ -1,7 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
@@ -149,12 +148,14 @@ public class ContentTemplateSerializer : ContentSerializer, ISyncSerializer<ICon
     }
 
     public override Task SaveItemAsync(IContent item)
-        => uSyncTaskHelper.FromResultOf(() => {
+        => uSyncTaskHelper.FromResultOf(() =>
+        {
             contentService.SaveBlueprint(item);
         });
 
     public override Task DeleteItemAsync(IContent item)
-        => uSyncTaskHelper.FromResultOf(() => {
-            contentService.DeleteBlueprint(item); 
+        => uSyncTaskHelper.FromResultOf(() =>
+        {
+            contentService.DeleteBlueprint(item);
         });
 }

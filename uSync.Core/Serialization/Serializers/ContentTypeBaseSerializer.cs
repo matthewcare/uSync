@@ -1,16 +1,13 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+
 using System.Reflection;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Cms.Core.Services.OperationStatus;
 using Umbraco.Cms.Core.Strings;
-using Umbraco.Cms.Infrastructure.Migrations.Upgrade.V_13_0_0;
 using Umbraco.Extensions;
 
 using uSync.Core.Extensions;
@@ -658,7 +655,7 @@ public abstract class ContentTypeBaseSerializer<TObject> : SyncContainerSerializ
     }
 
     protected virtual void EnsureAliasCache() { }
-    
+
 
     protected void ClearAliases()
     {
@@ -877,7 +874,7 @@ public abstract class ContentTypeBaseSerializer<TObject> : SyncContainerSerializ
                         var compositionParent = item.CompositionPropertyGroups.FirstOrDefault(x => x.Alias.InvariantEquals(tabRoot));
                         if (compositionParent != null)
                         {
-                            logger.LogInformation("Creating parent tab from inherited tab data, {alias} {name}", compositionParent.Alias, compositionParent.Name ?? compositionParent.Alias); 
+                            logger.LogInformation("Creating parent tab from inherited tab data, {alias} {name}", compositionParent.Alias, compositionParent.Name ?? compositionParent.Alias);
 
                             item.AddPropertyGroup(tabRoot, compositionParent.Name ?? tabRoot);
                             item.PropertyGroups[tabRoot].Type = compositionParent.Type;
@@ -983,7 +980,7 @@ public abstract class ContentTypeBaseSerializer<TObject> : SyncContainerSerializ
                 .Select(x => GetTabAliasFromTabGroup(x))
                 .ToList();
 
-            var inheritedTabs =item.CompositionPropertyGroups.Select(x => x.Alias).ToList();
+            var inheritedTabs = item.CompositionPropertyGroups.Select(x => x.Alias).ToList();
 
             List<PropertyGroup> removals = [];
             foreach (var tab in item.PropertyGroups)
@@ -1026,7 +1023,7 @@ public abstract class ContentTypeBaseSerializer<TObject> : SyncContainerSerializ
     [Obsolete("Use CleanFolderAsync will be removed in v16")]
     protected void CleanFolder(TObject item, XElement node)
         => CleanFolderAsync(item, node).Wait();
-    protected async Task CleanFolderAsync(TObject item, XElement node) 
+    protected async Task CleanFolderAsync(TObject item, XElement node)
     {
         var folderNode = node.Element(uSyncConstants.Xml.Info)?.Element("Folder");
         if (folderNode is null) return;
@@ -1047,7 +1044,7 @@ public abstract class ContentTypeBaseSerializer<TObject> : SyncContainerSerializ
     [Obsolete("Use CleanMasterAsync will be removed in v16")]
     protected IEnumerable<uSyncChange> DeserializeCompositions(TObject item, XElement node)
         => DeserializeCompositionsAsync(item, node).Result;
-    
+
     protected async Task<IEnumerable<uSyncChange>> DeserializeCompositionsAsync(TObject item, XElement node)
     {
         logger.LogDebug("{alias} De-serializing Compositions", item.Alias);
@@ -1340,24 +1337,29 @@ public abstract class ContentTypeBaseSerializer<TObject> : SyncContainerSerializ
         => await _baseService.GetAsync(key);
 
     public override Task<TObject?> FindItemAsync(string alias)
-        => uSyncTaskHelper.FromResultOf(() => {
+        => uSyncTaskHelper.FromResultOf(() =>
+        {
             return _baseService.Get(alias);
         });
 
-    public override async Task SaveItemAsync(TObject item) { 
+    public override async Task SaveItemAsync(TObject item)
+    {
         if (item.IsDirty() is false) return;
 
-        if (item.Id <= 0) {
+        if (item.Id <= 0)
+        {
             await _baseService.CreateAsync(item, Constants.Security.SuperUserKey);
         }
-        else {
+        else
+        {
             await _baseService.UpdateAsync(item, Constants.Security.SuperUserKey);
         }
 
         //if (item.IsDirty()) _baseService.Save(item);
     }
 
-    public override async Task SaveAsync(IEnumerable<TObject> items) { 
+    public override async Task SaveAsync(IEnumerable<TObject> items)
+    {
         foreach (var item in items)
             await this.SaveItemAsync(item);
     }

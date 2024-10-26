@@ -1,8 +1,8 @@
-﻿using System.Collections.Concurrent;
+﻿using Microsoft.Extensions.Logging;
+
+using System.Collections.Concurrent;
 using System.Web;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
@@ -131,7 +131,7 @@ public abstract class SyncContainerSerializerBase<TObject>
     // Getters - get information we already know (either in the object or the XElement)
 
     [Obsolete("Use GetFolderNode will be removed in v16")]
-    protected XElement? GetFolderNode(TObject item) 
+    protected XElement? GetFolderNode(TObject item)
         => GetFolderNodeAsync(item).Result;
 
     protected async Task<XElement?> GetFolderNodeAsync(TObject item)
@@ -184,16 +184,16 @@ public abstract class SyncContainerSerializerBase<TObject>
 
     protected virtual async Task<EntityContainer?> FindContainerAsync(Guid key)
        => entityTypeContainerTypeService is null || key == Guid.Empty
-            ? null 
+            ? null
             : await entityTypeContainerTypeService.GetAsync(key);
 
     protected virtual async Task<IEnumerable<EntityContainer>> FindContainersAsync(string folder, int level)
-        => entityTypeContainerTypeService is null 
-            ? [] 
+        => entityTypeContainerTypeService is null
+            ? []
             : await entityTypeContainerTypeService.GetAsync(folder, level);
 
     public virtual async Task<IEnumerable<EntityContainer>> GetContainersAsync(TObject item)
-    { 
+    {
         if (entityTypeContainerTypeService is null) return [];
 
         var parent = await entityTypeContainerTypeService.GetParentAsync(item);
@@ -247,7 +247,7 @@ public abstract class SyncContainerSerializerBase<TObject>
             return result;
         }
         else
-        {           
+        {
             var result = await entityTypeContainerTypeService.UpdateAsync(existing.Key, existing.Name, Constants.Security.SuperUserKey);
             return result;
         }

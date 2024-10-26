@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.ContentEditing;
@@ -36,7 +36,7 @@ public class DomainSerializer : SyncSerializerBase<IDomain>, ISyncSerializer<IDo
 
 
     protected override async Task<SyncAttempt<IDomain>> DeserializeCoreAsync(XElement node, SyncSerializerOptions options)
-    { 
+    {
         var item = await FindOrCreateAsync(node);
 
         var info = node.Element(uSyncConstants.Xml.Info);
@@ -289,7 +289,7 @@ public class DomainSerializer : SyncSerializerBase<IDomain>, ISyncSerializer<IDo
 
         var existing = await _domainService.GetAssignedDomainsAsync(contentKey.Result, true);
 
-        List<IDomain> newDomains = [..existing, item];
+        List<IDomain> newDomains = [.. existing, item];
         var updateModel = new DomainsUpdateModel
         {
             Domains = newDomains
@@ -300,7 +300,7 @@ public class DomainSerializer : SyncSerializerBase<IDomain>, ISyncSerializer<IDo
                     IsoCode = x.LanguageIsoCode!,
                 })
         };
-        
+
         await _domainService.UpdateDomainsAsync(contentKey.Result, updateModel);
     }
 

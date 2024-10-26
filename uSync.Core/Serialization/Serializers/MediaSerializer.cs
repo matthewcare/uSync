@@ -1,7 +1,7 @@
-﻿using System.Security.Cryptography;
-using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Security.Cryptography;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;

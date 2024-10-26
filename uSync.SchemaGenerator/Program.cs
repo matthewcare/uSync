@@ -1,8 +1,8 @@
-﻿using System;
+﻿using CommandLine;
+
+using System;
 using System.IO;
 using System.Threading.Tasks;
-
-using CommandLine;
 
 namespace uSync;
 

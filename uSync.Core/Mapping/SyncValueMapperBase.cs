@@ -57,7 +57,7 @@ public abstract class SyncValueMapperBase
     [Obsolete("use GetImportValueAsync will be removed in v16")]
     public virtual string? GetImportValue(string value, string editorAlias)
         => GetImportValueAsync(value, editorAlias).Result;
-    
+
     public virtual Task<string?> GetImportValueAsync(string value, string editorAlias)
         => Task.FromResult<string?>(value);
 

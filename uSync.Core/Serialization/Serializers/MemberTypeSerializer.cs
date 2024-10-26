@@ -1,6 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
@@ -22,7 +22,7 @@ public class MemberTypeSerializer : ContentTypeBaseSerializer<IMemberType>, ISyn
     private readonly IMemberTypeService _memberTypeService;
 
     public MemberTypeSerializer(
-        IEntityService entityService, 
+        IEntityService entityService,
         ILogger<MemberTypeSerializer> logger,
         IDataTypeService dataTypeService,
         IMemberTypeService memberTypeService,
@@ -209,7 +209,8 @@ public class MemberTypeSerializer : ContentTypeBaseSerializer<IMemberType>, ISyn
 
     // member type doesn't have its own container service (in v15)
 
-    protected override Task<EntityContainer?> FindContainerAsync(Guid key) { 
+    protected override Task<EntityContainer?> FindContainerAsync(Guid key)
+    {
         return Task.FromResult(_memberTypeService.GetContainer(key));
     }
     protected override Task<IEnumerable<EntityContainer>> FindContainersAsync(string folder, int level)

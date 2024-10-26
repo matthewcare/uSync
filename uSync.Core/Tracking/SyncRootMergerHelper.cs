@@ -17,49 +17,49 @@ public class SyncRootMergerHelper
         return combined;
     }
 
-	public static XElement? GetDifferencesByFileContents(List<XElement> nodes)
-	{
-		/// work out what is the 'latest' version of the node we are using for comparison.
-		/// 
-		// Node1, Node2, Node3 
-		if (nodes is null || nodes.Count == 0) return null;
+    public static XElement? GetDifferencesByFileContents(List<XElement> nodes)
+    {
+        /// work out what is the 'latest' version of the node we are using for comparison.
+        /// 
+        // Node1, Node2, Node3 
+        if (nodes is null || nodes.Count == 0) return null;
 
-		var last = nodes[0]; // Node1
-		bool hasDifference = false;
-		for (int n = 1; n < nodes.Count; n++)
-		{
-			// first pass Node2
-			// second pass Node3
-			if (GetDifferenceByContents(last, nodes[n]) != null)
-			{
-				last = nodes[n]; // last = node2. 
-				hasDifference = true;
-			}
-			{
-				// if Node1 and Node2 are the same. 
-				// last == node1
-			}
-		}
-		// at the end last will either still be node1, or node2 or node3. 
-		if (hasDifference is false) return null;
-		return last;
-	}
+        var last = nodes[0]; // Node1
+        bool hasDifference = false;
+        for (int n = 1; n < nodes.Count; n++)
+        {
+            // first pass Node2
+            // second pass Node3
+            if (GetDifferenceByContents(last, nodes[n]) != null)
+            {
+                last = nodes[n]; // last = node2. 
+                hasDifference = true;
+            }
+            {
+                // if Node1 and Node2 are the same. 
+                // last == node1
+            }
+        }
+        // at the end last will either still be node1, or node2 or node3. 
+        if (hasDifference is false) return null;
+        return last;
+    }
 
-	public static XElement? GetDifferenceByContents(XElement source, XElement target)
-	{
-		// if the two files are identical there are no changes. 
-		if (source.MakePlatformSafeHashAsync().Result != target.MakePlatformSafeHashAsync().Result) return null;
-		return target;
-	}
+    public static XElement? GetDifferenceByContents(XElement source, XElement target)
+    {
+        // if the two files are identical there are no changes. 
+        if (source.MakePlatformSafeHashAsync().Result != target.MakePlatformSafeHashAsync().Result) return null;
+        return target;
+    }
 
-	public static (XElement combined, XElement differences) CompareNodes(List<XElement> nodes, IList<TrackingItem> trackedNodes)
+    public static (XElement combined, XElement differences) CompareNodes(List<XElement> nodes, IList<TrackingItem> trackedNodes)
     {
         var differences = XElement.Parse(nodes[^1].ToString());
         var combined = XElement.Parse(nodes[^1].ToString());
 
-		// latest is a blank one, that is a delete so should 
-		// be marked as one.
-		if (combined.IsEmptyItem())
+        // latest is a blank one, that is a delete so should 
+        // be marked as one.
+        if (combined.IsEmptyItem())
             return (combined, BlankNode(differences));
 
         foreach (var node in nodes[..^1])
@@ -188,9 +188,9 @@ public class SyncRootMergerHelper
             else
             {
                 var replacement = FindByKey(combinedCollection, element, item.Keys, key);
-				
+
                 // only add this if its not a delete
-				if (targetElement.Attribute("deleted").ValueOrDefault(false) is false)
+                if (targetElement.Attribute("deleted").ValueOrDefault(false) is false)
                 {
                     replacement?.AddAfterSelf(targetElement);
                 }

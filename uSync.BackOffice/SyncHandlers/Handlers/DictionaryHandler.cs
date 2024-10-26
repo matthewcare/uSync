@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Events;
@@ -21,7 +21,6 @@ using uSync.BackOffice.Services;
 using uSync.BackOffice.SyncHandlers.Interfaces;
 using uSync.BackOffice.SyncHandlers.Models;
 using uSync.Core;
-using uSync.Core.Serialization;
 
 using static Umbraco.Cms.Core.Constants;
 
@@ -63,7 +62,7 @@ public class DictionaryHandler : SyncHandlerLevelBase<IDictionaryItem>, ISyncHan
 
     /// <inheritdoc/>
     public override async Task<IEnumerable<uSyncAction>> ImportAsync(string file, HandlerSettings config, uSyncImportOptions options)
-    { 
+    {
         if (IsOneWay(config))
         {
             // only sync dictionary items if they are new

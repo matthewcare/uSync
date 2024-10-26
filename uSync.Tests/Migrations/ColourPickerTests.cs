@@ -28,8 +28,8 @@ internal class ColourPickerTests : MigrationTestBase
   ""useLabel"": true
 }";
 
-	[Test]
-	public void ColourPickerValuesTest()
+    [Test]
+    public void ColourPickerValuesTest()
         => TestSerializerPropertyMigration(_serializer, Source, Target);
 
     [Test]

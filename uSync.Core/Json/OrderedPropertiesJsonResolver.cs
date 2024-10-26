@@ -20,9 +20,9 @@ internal class OrderedPropertiesJsonResolver : DefaultJsonTypeInfoResolver
     {
         JsonTypeInfo typeInfo = base.GetTypeInfo(type, options);
 
-        switch(typeInfo.Kind)
+        switch (typeInfo.Kind)
         {
-            case JsonTypeInfoKind.Object: 
+            case JsonTypeInfoKind.Object:
                 return SortObject(typeInfo);
             default:
                 return typeInfo;
@@ -31,12 +31,12 @@ internal class OrderedPropertiesJsonResolver : DefaultJsonTypeInfoResolver
 
     private JsonTypeInfo SortObject(JsonTypeInfo typeInfo)
     {
-		var order = 0;
-		foreach (var property in typeInfo.Properties.OrderBy(x => x.Name))
-		{
-			property.Order = order++;
-		}
+        var order = 0;
+        foreach (var property in typeInfo.Properties.OrderBy(x => x.Name))
+        {
+            property.Order = order++;
+        }
 
-		return typeInfo;
-	}
+        return typeInfo;
+    }
 }

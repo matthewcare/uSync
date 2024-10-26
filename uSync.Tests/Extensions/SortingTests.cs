@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NUnit.Framework;
 
-using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
 using uSync.Core.Dependency;
 

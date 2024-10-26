@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System;
+using System.Threading.Tasks;
 
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Events;

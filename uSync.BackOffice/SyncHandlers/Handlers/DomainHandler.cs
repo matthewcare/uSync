@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Events;
@@ -63,7 +63,7 @@ public class DomainHandler : SyncHandlerBase<IDomain>, ISyncHandler,
     /// <inheritdoc/>
     protected override async Task<IEnumerable<IEntity>> GetChildItemsAsync(Guid key)
     {
-        if (key == Guid.Empty) 
+        if (key == Guid.Empty)
             return (await domainService.GetAllAsync(true))
                 .Where(x => x is IEntity)
                 .Select(x => x as IEntity);

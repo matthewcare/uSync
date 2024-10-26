@@ -209,7 +209,7 @@ public abstract class SyncNestedValueMapperBase : SyncValueMapperBase
                 if (mapperCollection.Value is not null)
                     return (await mapperCollection.Value.EntityCache.GetContentType(attempt.Result)) ?? contentTypeService.Get(attempt.Result);
 
-                return contentTypeService.Get(attempt.Result);  
+                return contentTypeService.Get(attempt.Result);
             }
 
         }

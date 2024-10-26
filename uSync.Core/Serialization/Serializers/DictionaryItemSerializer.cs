@@ -1,7 +1,6 @@
-﻿using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Logging;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
@@ -218,8 +217,8 @@ public class DictionaryItemSerializer : SyncSerializerBase<IDictionaryItem>, ISy
     }
 
     public override async Task SaveItemAsync(IDictionaryItem item)
-        => _ = item.HasIdentity 
-            ? await _dictionaryItemService.UpdateAsync(item, Constants.Security.SuperUserKey) 
+        => _ = item.HasIdentity
+            ? await _dictionaryItemService.UpdateAsync(item, Constants.Security.SuperUserKey)
             : await _dictionaryItemService.CreateAsync(item, Constants.Security.SuperUserKey);
 
     public override Task DeleteItemAsync(IDictionaryItem item)

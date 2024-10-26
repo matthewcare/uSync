@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.SignalR;
+
+using System;
 using System.Globalization;
 using System.Threading.Tasks;
-
-using Microsoft.AspNetCore.SignalR;
 
 namespace uSync.BackOffice.Hubs;
 

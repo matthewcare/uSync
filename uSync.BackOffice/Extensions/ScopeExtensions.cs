@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System;
 
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Scoping;

@@ -1,8 +1,8 @@
-﻿using System.Globalization;
+﻿using Microsoft.Extensions.Logging;
+
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
@@ -461,9 +461,9 @@ public abstract class ContentSerializerBase<TObject> : SyncTreeSerializerBase<TO
                     if (item.CultureInfos?.TryGetValue(culture, out var cultureInfo) is false)
                     {
                         item.CultureInfos.Add(new ContentCultureInfos(culture));
-					}
+                    }
 
-					var cultureName = cultureNode.ValueOrDefault(string.Empty);
+                    var cultureName = cultureNode.ValueOrDefault(string.Empty);
                     var currentCultureName = item.GetCultureName(culture) ?? "";
                     if (string.IsNullOrEmpty(cultureName) is false
                         && cultureName != currentCultureName)
@@ -528,7 +528,7 @@ public abstract class ContentSerializerBase<TObject> : SyncTreeSerializerBase<TO
                                 //
                                 // if the content config thinks it should vary by culture, but the document type doesn't
                                 // then we can check if this is default language, and use that to se the value
-                                
+
                                 if (!culture.InvariantEquals(defaultLanguageIsoCode))
                                 {
                                     // this culture is not the default for the site, so don't use it to 

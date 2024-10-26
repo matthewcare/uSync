@@ -9,7 +9,7 @@ internal class FileUploadMigrationTests : MigrationTestBase
 {
     private FileUploadMigratingConfigSerializer _serializer = new();
 
-	private static string Source = @"{
+    private static string Source = @"{
   ""FileExtensions"": [
     {
       ""id"": 0,
@@ -22,7 +22,7 @@ internal class FileUploadMigrationTests : MigrationTestBase
   ]
 }";
 
-	private static string Target = @"{
+    private static string Target = @"{
   ""fileExtensions"": [
     ""pdf"",
     ""png""
@@ -30,9 +30,9 @@ internal class FileUploadMigrationTests : MigrationTestBase
 }";
 
 
-	[Test]
-	public void FileMigrationValueTest()
-		=> TestSerializerPropertyMigration(_serializer, Source, Target);
+    [Test]
+    public void FileMigrationValueTest()
+        => TestSerializerPropertyMigration(_serializer, Source, Target);
 
     [Test]
     public void FileUploadMigratedValueTest()

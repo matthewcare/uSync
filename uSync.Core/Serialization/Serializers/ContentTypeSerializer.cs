@@ -1,17 +1,14 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+
+using System.Diagnostics;
 using System.Reflection;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
-
-using Org.BouncyCastle.Asn1.Cms;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Entities;
 using Umbraco.Cms.Core.Services;
-using Umbraco.Cms.Core.Services.OperationStatus;
 using Umbraco.Cms.Core.Strings;
 using Umbraco.Extensions;
 
@@ -123,7 +120,7 @@ public class ContentTypeSerializer : ContentTypeBaseSerializer<IContentType>, IS
     }
 
     protected override async Task<SyncAttempt<IContentType>> DeserializeCoreAsync(XElement node, SyncSerializerOptions options)
-    { 
+    {
         var attempt = await FindOrCreateAsync(node);
         if (attempt.Success == false || attempt.Result is null)
             throw attempt.Exception ?? new Exception($"Unknown error {node.GetAlias()}");

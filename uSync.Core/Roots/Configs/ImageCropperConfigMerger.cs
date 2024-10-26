@@ -37,8 +37,8 @@ internal class ImageCropperConfigMerger : SyncConfigMergerBase, ISyncConfigMerge
             x => x.Alias,
             (x, label) => x.Alias = $"{_removedLabel}:{x.Alias}");
 
-		if (targetConfig.Crops.Length == 0) return null;
+        if (targetConfig.Crops.Length == 0) return null;
 
-		return targetConfig;
+        return targetConfig;
     }
 }

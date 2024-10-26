@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
-using uSync.BackOffice.Configuration;
 using uSync.BackOffice.Services;
 using uSync.Core;
 
@@ -39,13 +38,13 @@ internal class SyncLegacyService : ISyncLegacyService
     {
         folder = null;
 
-        for(int n = _majorVersion-1; n > 8; n--)
+        for (int n = _majorVersion - 1; n > 8; n--)
         {
             var legacyFolder = $"~/uSync/v{n}";
             if (_syncFileService.DirectoryExists(legacyFolder))
             {
                 if (_syncFileService.FileExists(Path.Combine(legacyFolder, ".ignore")) is true)
-					continue;
+                    continue;
 
                 folder = legacyFolder;
                 return true;
@@ -57,14 +56,14 @@ internal class SyncLegacyService : ISyncLegacyService
 
     /// <inheritdoc/>
     public async Task<bool> IgnoreLegacyFolderAsync(string folder, string message)
-	{
-		if (_syncFileService.DirectoryExists(folder) is false)
-			return false;
+    {
+        if (_syncFileService.DirectoryExists(folder) is false)
+            return false;
 
-		await _syncFileService.SaveFileAsync(Path.Combine(folder, ".ignore"),
+        await _syncFileService.SaveFileAsync(Path.Combine(folder, ".ignore"),
             $"{message}\r\nDelete this file for this folder to be detected as legacy again");
-		return true;
-	}
+        return true;
+    }
 
     /// <inheritdoc/>
     public bool CopyLegacyFolder(string folder)
@@ -73,13 +72,13 @@ internal class SyncLegacyService : ISyncLegacyService
         var backupPath = $"~/uSync/v{_majorVersion}-backup";
 
         if (_syncFileService.DirectoryExists(folder) is false)
-			return false;
+            return false;
 
         if (_syncFileService.DirectoryExists(latestPath))
         {
             _syncFileService.CopyFolder(latestPath, backupPath);
             _syncFileService.DeleteFolder(latestPath);
-		}
+        }
 
         _syncFileService.CreateFolder(latestPath);
 

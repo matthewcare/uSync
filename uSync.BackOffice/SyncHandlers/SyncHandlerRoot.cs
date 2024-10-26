@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,10 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using Microsoft.Extensions.Logging;
-
-using Org.BouncyCastle.Utilities.IO.Pem;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Cache;
@@ -250,7 +248,7 @@ public abstract class SyncHandlerRoot<TObject, TContainer>
     /// <remarks>
     ///  allows us to 'merge' a collection of folders down and perform an import against them (without first having to actually merge the folders on disk)
     /// </remarks>
-   
+
     public async Task<IEnumerable<uSyncAction>> ImportAllAsync(string[] folders, HandlerSettings config, uSyncImportOptions options)
     {
         var cacheKey = PrepCaches();
@@ -969,8 +967,8 @@ public abstract class SyncHandlerRoot<TObject, TContainer>
             return uSyncAction.Fail(nameof(item), this.handlerType, this.ItemType, ChangeType.Fail, "Item not set",
                 new ArgumentNullException(nameof(item))).AsEnumerableOfOne();
 
-        if ( await _mutexService.FireItemStartingEventAsync(new uSyncExportingItemNotification<TObject>(item, (ISyncHandler)this)))
-        { 
+        if (await _mutexService.FireItemStartingEventAsync(new uSyncExportingItemNotification<TObject>(item, (ISyncHandler)this)))
+        {
             return uSyncActionHelper<TObject>
                 .ReportAction(ChangeType.NoChange, GetItemName(item), string.Empty, string.Empty, GetItemKey(item), this.Alias,
                                 "Change stopped by delegate event")
@@ -1020,9 +1018,9 @@ public abstract class SyncHandlerRoot<TObject, TContainer>
         {
             if (await ShouldExportAsync(attempt.Item, config))
             {
-                
+
                 var files = await Task.WhenAll(folders
-                    .Select(async x =>  await GetPathAsync(x, item, config.GuidNames, config.UseFlatStructure))
+                    .Select(async x => await GetPathAsync(x, item, config.GuidNames, config.UseFlatStructure))
                     .ToArray());
 
                 var nodes = await syncFileService.GetAllNodesAsync(files[..^1]);
@@ -1032,7 +1030,7 @@ public abstract class SyncHandlerRoot<TObject, TContainer>
                     var differences = syncFileService.GetDifferences(nodes, trackers.FirstOrDefault());
                     if (differences is not null && differences.HasElements)
                     {
-                       await syncFileService.SaveXElementAsync(attempt.Item, filename);
+                        await syncFileService.SaveXElementAsync(attempt.Item, filename);
                     }
                     else
                     {

@@ -37,6 +37,6 @@ internal class uSyncManagementCache : ISyncManagementCache
 
     public void Clear(Guid id)
     {
-        _actionCache.TryRemove(id, out _);  
+        _actionCache.TryRemove(id, out _);
     }
 }

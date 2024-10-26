@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using System.Xml.Linq;
+﻿using Microsoft.Extensions.Logging;
 
-using Microsoft.Extensions.Logging;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.Models;
@@ -192,11 +192,11 @@ public class ContentSerializer : ContentSerializerBase<IContent>, ISyncSerialize
             details.AddNotNull(HandleTrashedState(item, trashed, restoreParent));
         }
 
-		// cultures...
-		
+        // cultures...
 
 
-		details.AddNotNull(await DeserializeTemplate(item, node));
+
+        details.AddNotNull(await DeserializeTemplate(item, node));
 
         var propertiesAttempt = await DeserializePropertiesAsync(item, node, options);
         if (!propertiesAttempt.Success)
@@ -467,16 +467,16 @@ public class ContentSerializer : ContentSerializerBase<IContent>, ISyncSerialize
             var schedules = GetSchedules(node.Element("Info")?.Element("Schedule"));
 
             ContentScheduleCollection scheduleCollection = new ContentScheduleCollection();
-            foreach(var schedule in schedules)
+            foreach (var schedule in schedules)
             {
                 scheduleCollection.Add(schedule);
             }
 
-			// v14 we always save now, as save and publish doesn't do that anymore...
-			logger.LogDebug("Performing Save: {id} {name} {user}", item.Id, item.Name, options.UserId);
-			contentService.Save(item, options.UserId, scheduleCollection);
+            // v14 we always save now, as save and publish doesn't do that anymore...
+            logger.LogDebug("Performing Save: {id} {name} {user}", item.Id, item.Name, options.UserId);
+            contentService.Save(item, options.UserId, scheduleCollection);
 
-			if (publishedNode.HasElements)
+            if (publishedNode.HasElements)
             {
                 // culture based publishing.
                 var cultures = options.GetDeserializedCultures(node);
@@ -530,13 +530,13 @@ public class ContentSerializer : ContentSerializerBase<IContent>, ISyncSerialize
         }
         else
         {
-			// save?
-			logger.LogDebug("Performing Save (Not published): {id} {name} {user}", item.Id, item.Name, options.UserId);
-			contentService.Save(item, options.UserId);
+            // save?
+            logger.LogDebug("Performing Save (Not published): {id} {name} {user}", item.Id, item.Name, options.UserId);
+            contentService.Save(item, options.UserId);
 
-		}
+        }
 
-		return Attempt.Succeed("Saved");
+        return Attempt.Succeed("Saved");
     }
 
     /// <summary>
@@ -731,7 +731,7 @@ public class ContentSerializer : ContentSerializerBase<IContent>, ISyncSerialize
         => Task.FromResult(contentService.Save(items));
 
     public override async Task SaveItemAsync(IContent item)
-        => await SaveItemAsync(item,-1);
+        => await SaveItemAsync(item, -1);
 
     public Task SaveItemAsync(IContent item, int userId)
     {

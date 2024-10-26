@@ -40,7 +40,7 @@ public interface ISyncItemFactory
         => GetDependenciesAsync(item, flags).Result;
 
     Task<IEnumerable<uSyncDependency>> GetDependenciesAsync<TObject>(TObject item, DependencyFlags flags);
-    
+
     SyncEntityCache EntityCache { get; }
 
 }

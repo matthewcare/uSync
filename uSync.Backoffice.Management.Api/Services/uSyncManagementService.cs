@@ -1,6 +1,4 @@
-﻿using System.Reflection.Emit;
-
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 
 using Umbraco.Extensions;
 
@@ -57,7 +55,7 @@ internal class uSyncManagementService : ISyncManagementService
             Color = "positive"
         };
 
-		var defaultImport = new SyncActionButton()
+        var defaultImport = new SyncActionButton()
         {
             Key = HandlerActions.Import.ToString(),
             Label = HandlerActions.Import.ToString(),
@@ -72,13 +70,13 @@ internal class uSyncManagementService : ISyncManagementService
                 ]
         };
 
-		var defaultExport = new SyncActionButton()
-		{
-			Key = HandlerActions.Export.ToString(),
-			Label = HandlerActions.Export.ToString(),
-			Look = "primary",
-			Color = "default"
-		};
+        var defaultExport = new SyncActionButton()
+        {
+            Key = HandlerActions.Export.ToString(),
+            Label = HandlerActions.Export.ToString(),
+            Look = "primary",
+            Color = "default"
+        };
 
         var everythingExport = new SyncActionButton()
         {
@@ -95,8 +93,8 @@ internal class uSyncManagementService : ISyncManagementService
                 ]
         };
 
-		// TODO: we need to load in additional action groups as needed from plugins.
-		List<SyncActionButton> defaultButtons = [defaultReport, defaultImport, defaultExport];
+        // TODO: we need to load in additional action groups as needed from plugins.
+        List<SyncActionButton> defaultButtons = [defaultReport, defaultImport, defaultExport];
         List<SyncActionButton> everythingButtons = [defaultReport, defaultImport, everythingExport];
 
         List<SyncActionGroup> actionGroups = [];
@@ -108,7 +106,7 @@ internal class uSyncManagementService : ISyncManagementService
 
         var groups = _handlerFactory.GetValidHandlerGroupsAndIcons(options);
 
-        foreach(var group in groups)
+        foreach (var group in groups)
         {
             actionGroups.Add(new SyncActionGroup
             {
@@ -135,36 +133,36 @@ internal class uSyncManagementService : ISyncManagementService
 
 
 
-  //      List<SyncActionGroup> actions = [
-		//	new SyncActionGroup
-		//	{
-		//		GroupName = "Settings",
-		//		Icon = "icon-settings-alt",
-		//		Key = "settings",
-		//		Buttons = defaultButtons
-		//	},
-		//	new SyncActionGroup
-		//	{
-		//		GroupName = "Content",
-		//		Icon = "icon-documents",
-		//		Key = "content",
-		//		Buttons = defaultButtons
-		//	},
-		//	new SyncActionGroup
-		//	{
-		//		GroupName = "Everything",
-		//		Icon = "icon-paper-plane-alt",
-		//		Key = "all",
-		//		Buttons = everythingButtons
-		//	}
-		//];
+        //      List<SyncActionGroup> actions = [
+        //	new SyncActionGroup
+        //	{
+        //		GroupName = "Settings",
+        //		Icon = "icon-settings-alt",
+        //		Key = "settings",
+        //		Buttons = defaultButtons
+        //	},
+        //	new SyncActionGroup
+        //	{
+        //		GroupName = "Content",
+        //		Icon = "icon-documents",
+        //		Key = "content",
+        //		Buttons = defaultButtons
+        //	},
+        //	new SyncActionGroup
+        //	{
+        //		GroupName = "Everything",
+        //		Icon = "icon-paper-plane-alt",
+        //		Key = "all",
+        //		Buttons = everythingButtons
+        //	}
+        //];
 
-  //      return actions;
+        //      return actions;
 
-	}
+    }
 
 
-	public async Task<PerformActionResponse> PerformActionAsync(PerformActionRequest actionRequest)
+    public async Task<PerformActionResponse> PerformActionAsync(PerformActionRequest actionRequest)
     {
         if (Enum.TryParse(actionRequest.Action, out HandlerActions action) is false)
             throw new ArgumentException($"Invalid action {actionRequest.Action}");
@@ -173,25 +171,25 @@ internal class uSyncManagementService : ISyncManagementService
             .ToList();
 
         if (action == HandlerActions.Export && string.IsNullOrWhiteSpace(actionRequest.RequestId))
-        { 
+        {
             // first step in an export.
             if (actionRequest.Options?.Clean is true)
             {
                 // clean the export folder.  
                 _syncActionService.CleanExportFolder();
-			}
+            }
         }
 
         Guid requestId = GetRequestId(actionRequest);
 
-		HubClientService? hubClient = default;
-		if (actionRequest.Options?.ClientId != null)
-		{
-			hubClient = new HubClientService(_hubContext, actionRequest.Options.ClientId);
-		}
-		uSyncCallbacks callbacks = hubClient?.Callbacks() ?? new uSyncCallbacks(null, null);
+        HubClientService? hubClient = default;
+        if (actionRequest.Options?.ClientId != null)
+        {
+            hubClient = new HubClientService(_hubContext, actionRequest.Options.ClientId);
+        }
+        uSyncCallbacks callbacks = hubClient?.Callbacks() ?? new uSyncCallbacks(null, null);
 
-		if (actionRequest.StepNumber >= handlers.Count)
+        if (actionRequest.StepNumber >= handlers.Count)
         {
             var finalActions = _syncManagementCache.GetCachedActions(requestId);
 
@@ -230,7 +228,7 @@ internal class uSyncManagementService : ISyncManagementService
         {
             RequestId = requestId.ToString(),
             Actions = results.Actions.Select(x => x.ToActionView()),
-            Status = GetSummaries(handlers, actionRequest.StepNumber, results.Actions.ToList() ),
+            Status = GetSummaries(handlers, actionRequest.StepNumber, results.Actions.ToList()),
             Complete = false
         };
     }

@@ -60,7 +60,7 @@ public class HandlerSettings
 
     // TODO: v13 - change this to string, object settings collection. 
     //             makes for better intellisense from schema.
-    public Dictionary<string, string> Settings { get; set; } 
+    public Dictionary<string, string> Settings { get; set; }
         = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
 }
 

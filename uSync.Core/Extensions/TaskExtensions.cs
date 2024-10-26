@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace uSync.Core.Extensions;
+﻿namespace uSync.Core.Extensions;
 
 /// <summary>
 ///  wrappers for while we wait for some things to become async

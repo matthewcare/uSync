@@ -1,7 +1,7 @@
-﻿using System;
-using System.Xml.Linq;
+﻿using NUnit.Framework;
 
-using NUnit.Framework;
+using System;
+using System.Xml.Linq;
 
 using uSync.Core;
 
