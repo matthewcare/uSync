@@ -43,7 +43,7 @@ public class SortingTests
             Guid.Parse("{C70BE6CF-4923-4E2B-8742-B90FB7BBAFCB}"), // 2
         };
 
-        Assert.AreEqual(expected, result);
+        Assert.That(result, Is.EqualTo(expected));
     }
 
     [Test]
@@ -64,7 +64,7 @@ public class SortingTests
             1, 3, 7, 8, 9, 10, 4, 5, 6, 2
         };
 
-        Assert.AreEqual(expected, result);
+        Assert.That(result, Is.EqualTo(expected));
     }
 
     [Test]
@@ -82,6 +82,6 @@ public class SortingTests
 
         var result = _nodes.TopologicalSort(graph);
 
-        Assert.IsNull(result);
+        Assert.That(result, Is.Null);
     }
 }

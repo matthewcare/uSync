@@ -16,7 +16,7 @@ public class PathNameTests
     {
         var name = filename.ToAppSafeFileName();
 
-        Assert.AreEqual(filename, name);
+        Assert.That(name, Is.EqualTo(filename));    
     }
 
     [TestCase("c:\\website\\myfolder\\app.config", "c:\\website\\myfolder\\__app__.config")]
@@ -25,6 +25,6 @@ public class PathNameTests
     {
         var value = filename.ToAppSafeFileName();
 
-        Assert.AreEqual(expected, value);
+        Assert.That(value, Is.EqualTo(expected));
     }
 }

@@ -55,7 +55,7 @@ public class XmlExtensionTests
     public void Key_Value_From_Node_Attribute()
     {
         var key = _node.GetKey();
-        Assert.AreEqual(_key, key);
+        Assert.That(key, Is.EqualTo(_key));
     }
 
 
@@ -63,14 +63,14 @@ public class XmlExtensionTests
     public void Key_Value_Blank_When_Missing()
     {
         var blank = _blankNode.GetKey();
-        Assert.AreEqual(Guid.Empty, blank);
+        Assert.That(blank, Is.EqualTo(Guid.Empty));
     }
 
     [Test]
     public void Alias_Value_From_Node_Attribute()
     {
         var alias = _node.GetAlias();
-        Assert.AreEqual(_alias, alias);
+        Assert.That(alias, Is.EqualTo(_alias));
     }
 
 
@@ -78,70 +78,70 @@ public class XmlExtensionTests
     public void Alias_Value_Blank_When_Missing()
     {
         var blank = _blankNode.GetAlias();
-        Assert.AreEqual(string.Empty, blank);
+        Assert.That(blank, Is.EqualTo(string.Empty));
     }
 
     [Test]
     public void Level_Value_From_Node_Attribute()
     {
         var level = _node.GetLevel();
-        Assert.AreEqual(_level, level);
+        Assert.That(level, Is.EqualTo(_level));
     }
 
     [Test]
     public void Level_Value_Zero_When_Missing()
     {
         var defaultLevel = _blankNode.GetLevel();
-        Assert.AreEqual(0, defaultLevel);
+        Assert.That(defaultLevel, Is.EqualTo(0));
     }
 
     [Test]
     public void Cultures_Value_From_Node_Attribute()
     {
         var cultures = _node.GetCultures();
-        Assert.AreEqual(_cultures, cultures);
+        Assert.That(cultures, Is.EqualTo(_cultures));
     }
 
     [Test]
     public void Segments_Value_From_Node_Attribute()
     {
         var segments = _node.GetSegments();
-        Assert.AreEqual(_segments, segments);
+        Assert.That(segments, Is.EqualTo(_segments));
     }
 
     [Test]
     public void Is_EmptyNode_When_Empty()
     {
         var isEmpty = _emptyNode.IsEmptyItem();
-        Assert.IsTrue(isEmpty);
+        Assert.That(isEmpty, Is.True);
     }
 
     [Test]
     public void IsNot_EmptyNode_When_Normal()
     {
         var isNotEmpty = _node.IsEmptyItem();
-        Assert.IsFalse(isNotEmpty);
+        Assert.That(isNotEmpty, Is.False);
     }
 
     [Test]
     public void MakeEmpty_Makes_EmptyNode()
     {
         var e = XElementExtensions.MakeEmpty(_key, SyncActionType.Delete, _alias);
-        Assert.AreEqual(_emptyNode.ToString(), e.ToString());
+        Assert.That(_emptyNode.ToString(), Is.EqualTo(e.ToString()));
     }
 
     [Test]
     public void GetEmptyAction_Is_Delete_When_Set()
     {
         var action = _emptyNode.GetEmptyAction();
-        Assert.AreEqual(_actionType, action);
+        Assert.That(action, Is.EqualTo(SyncActionType.Delete));
     }
 
     [Test]
     public void GetEmptyAction_Is_None_When_Not_Empty()
     {
         SyncActionType noAction = _node.GetEmptyAction();
-        Assert.AreEqual(SyncActionType.None, noAction);
+        Assert.That(noAction, Is.EqualTo(SyncActionType.None));
     }
 
     [Test]
@@ -150,7 +150,7 @@ public class XmlExtensionTests
         var value = _node.Element("Container")
             .ValueOrDefault(_defaultValues);
 
-        Assert.AreEqual(_nodeValue, value);
+        Assert.That(value, Is.EqualTo(_nodeValue));
     }
 
 
@@ -160,7 +160,7 @@ public class XmlExtensionTests
         var missing = _node.Element("NoNode")
             .ValueOrDefault(_defaultValues);
 
-        Assert.AreEqual(missing, _defaultValues);
+        Assert.That(missing, Is.EqualTo(_defaultValues));
     }
 
     [Test]
@@ -169,7 +169,7 @@ public class XmlExtensionTests
         var blank = _node.Element("Blank")
             .ValueOrDefault(_defaultValues);
 
-        Assert.AreEqual(blank, _defaultValues);
+        Assert.That(_defaultValues, Is.EqualTo(blank));
     }
 
     [Test]
@@ -178,8 +178,8 @@ public class XmlExtensionTests
         var value = _node.Element("Integer")
             .ValueOrDefault(0);
 
-        Assert.IsInstanceOf<int>(value);
-        Assert.AreEqual(value, _level);
+        Assert.That(value, Is.TypeOf<int>());
+        Assert.That(_level, Is.EqualTo(value)); 
     }
 
     [Test]
@@ -188,8 +188,8 @@ public class XmlExtensionTests
         var value = _node.Element("Guid")
             .ValueOrDefault(Guid.Empty);
 
-        Assert.IsInstanceOf<Guid>(value);
-        Assert.AreEqual(_key, value);
+        Assert.That(value, Is.TypeOf<Guid>());
+        Assert.That(_key, Is.EqualTo(value));
     }
     [Test]
     public void Value_or_Default_Is_String()
@@ -197,7 +197,7 @@ public class XmlExtensionTests
         var value = _node.Element("String")
             .ValueOrDefault(_defaultValues);
 
-        Assert.IsInstanceOf<string>(value);
-        Assert.AreEqual(_nodeValue, value);
+        Assert.That(value, Is.TypeOf<string>());
+        Assert.That(_nodeValue, Is.EqualTo(value));
     }
 }

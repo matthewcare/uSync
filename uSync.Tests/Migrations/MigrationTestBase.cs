@@ -30,6 +30,6 @@ internal class MigrationTestBase
             );
         var resultJson = JsonSerializer.Serialize(result, JsonTextExtensions._defaultOptions);
 
-        Assert.AreEqual(targetDictionary, resultJson);
+        Assert.That(resultJson, Is.EqualTo(targetDictionary));
     }
 }

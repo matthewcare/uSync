@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 using System.Text.Json.Nodes;
 
@@ -22,7 +23,7 @@ internal class JsonDetectionTests
     public void StringValuesAreStrings(string value)
     {
         var result = value.IsValidJsonString();
-        Assert.IsFalse(result);
+        Assert.That(result, Is.False);  
     }
 
     [TestCase("{ \"name\": \"Test\" }")]
@@ -34,7 +35,7 @@ internal class JsonDetectionTests
     public void JsonValueIsJson(string value)
     {
         var result = value.IsValidJsonString();
-        Assert.IsTrue(result);
+        Assert.That(result, Is.True);
     }
 
     [TestCase("[]")]
@@ -42,7 +43,7 @@ internal class JsonDetectionTests
     public void EmptyJsonIsJson(string value)
     {
         var result = value.IsValidJsonString();
-        Assert.IsTrue(result);
+        Assert.That(result, Is.True);
     }
 
     [TestCase("{}")]
@@ -55,8 +56,8 @@ internal class JsonDetectionTests
     {
         value.TryConvertToJsonNode(out var result);
 
-        Assert.IsNotNull(result);
-        Assert.IsInstanceOf<JsonNode>(result);
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result is JsonNode, Is.True);
     }
 
     [TestCase("[SQUARE]")]
@@ -64,7 +65,7 @@ internal class JsonDetectionTests
     public void BadJsonReturnsNull(object value)
     {
         value.TryParseToJsonNode(out var result);
-        Assert.IsNull(result);
+        Assert.That(result, Is.Null);
     }
 
     [TestCase("{}")]
@@ -76,8 +77,8 @@ internal class JsonDetectionTests
     {
         var result = value.TryParseToJsonNode(out JsonNode node);
 
-        Assert.IsTrue(result);
-        Assert.IsInstanceOf<JsonNode>(node);
+        Assert.That(result, Is.True);
+        Assert.That(node is JsonNode, Is.True);
     }
 
     [TestCase("Hello")]
@@ -91,8 +92,8 @@ internal class JsonDetectionTests
     {
         var result = value.TryParseToJsonNode(out JsonNode node);
 
-        Assert.IsFalse(result);
-        Assert.IsNull(node);
+        Assert.That(result, Is.False);
+        Assert.That(node, Is.Null);
     }
 
     [TestCase("[]", 0)]
@@ -102,9 +103,9 @@ internal class JsonDetectionTests
     {
         var result = value.TryParseToJsonArray(out JsonArray array);
 
-        Assert.IsTrue(result);
-        Assert.IsInstanceOf<JsonArray>(array);
-        Assert.AreEqual(array.Count, expectedLength);
+        var count = array.Count;
+        Assert.That(result, Is.True);
+        Assert.That(count, Is.EqualTo(expectedLength));
     }
 
     [TestCase("{ \"name\": \"Test\" }")]
@@ -115,8 +116,8 @@ internal class JsonDetectionTests
     {
         var result = value.TryParseToJsonObject(out JsonObject obj);
 
-        Assert.IsTrue(result);
-        Assert.IsInstanceOf<JsonObject>(obj);
+        Assert.That(result, Is.True);
+        Assert.That(obj is JsonObject, Is.True);
     }
 
 }
