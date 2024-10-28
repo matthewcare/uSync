@@ -2509,13 +2509,13 @@
         "type": "Project",
         "dependencies": {
           "uSync.Community.Contrib": "[12.0.0, )",
-          "uSync.Core": "[14.2.0, )"
+          "uSync.Core": "[15.0.0, )"
         }
       },
       "usync.community.contrib": {
         "type": "Project",
         "dependencies": {
-          "uSync.Core": "[14.2.0, )"
+          "uSync.Core": "[15.0.0, )"
         }
       },
       "usync.core": {
