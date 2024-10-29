@@ -341,10 +341,10 @@ public class DataTypeSerializer : SyncContainerSerializerBase<IDataType>, ISyncS
     {
         if (item.IsDirty() is false) return;
 
-        if (item.Id <= 0)
-            await _dataTypeService.CreateAsync(item, Constants.Security.SuperUserKey);
-        else
+        if (item.HasIdentity is true)
             await _dataTypeService.UpdateAsync(item, Constants.Security.SuperUserKey);
+        else
+            await _dataTypeService.CreateAsync(item, Constants.Security.SuperUserKey);
     }
 
     public override async Task SaveAsync(IEnumerable<IDataType> items)
