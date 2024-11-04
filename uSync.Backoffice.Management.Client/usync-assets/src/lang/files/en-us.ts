@@ -8,6 +8,8 @@ export default {
 		Export: 'Export',
 		ImportForce: 'Import (Force)',
 		ExportClean: 'Export (Clean)',
+		ExportFile: 'Export to File',
+		ImportFile: 'Import from File',
 
 		noChange: 'Nothing has changed',
 		showAll: 'Show all',

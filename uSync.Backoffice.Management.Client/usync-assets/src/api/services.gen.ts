@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { GetActionsResponse, PerformActionData, PerformActionResponse2, CheckLegacyResponse, CopyLegacyResponse, IgnoreLegacyResponse, GetAddOnsResponse, GetAddonSplashResponse, GetHandlerSetSettingsData, GetHandlerSetSettingsResponse, GetSettingsResponse } from './types.gen';
+import type { GetActionsResponse, DownloadData, DownloadResponse, PerformActionData, PerformActionResponse2, CheckLegacyResponse, CopyLegacyResponse, IgnoreLegacyResponse, GetAddOnsResponse, GetAddonSplashResponse, GetHandlerSetSettingsData, GetHandlerSetSettingsResponse, GetSettingsResponse } from './types.gen';
 
 export class ActionsService {
     /**
@@ -14,6 +14,22 @@ export class ActionsService {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/umbraco/usync/api/v1/Actions'
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.requestId
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public static download(data: DownloadData = {}): CancelablePromise<DownloadResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/umbraco/usync/api/v1/Download',
+            query: {
+                requestId: data.requestId
+            }
         });
     }
     

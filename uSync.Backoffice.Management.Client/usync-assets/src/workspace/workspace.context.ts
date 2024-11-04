@@ -172,6 +172,12 @@ export class uSyncWorkspaceContext
 		var id = '';
 		var step: number = 0;
 
+		// pre-action checks, for files.
+		if (options.file && options.action === 'Import') {
+			// imports need to open the file dialog to get the file first.
+			console.log('file dialog here...');
+		}
+
 		do {
 			const { data } = await this.#repository.performAction({
 				id: id,
@@ -179,6 +185,7 @@ export class uSyncWorkspaceContext
 				group: options.group.key,
 				force: options.force,
 				clean: options.clean,
+				file: options.file,
 				step: step,
 				clientId: clientId,
 			});
@@ -201,8 +208,30 @@ export class uSyncWorkspaceContext
 			}
 		} while (!complete);
 
+		// post action
+		if (options.file && options.action === 'Export') {
+			// post export , open the dialog offer the download.
+			await this.downloadFile(id);
+		}
+
 		this.#completed.setValue(true);
 		this.#working.setValue(false);
+	}
+
+	async downloadFile(requestId: string) {
+		const response = await this.#repository.downloadFile(requestId);
+
+		if (!response) return;
+
+		const url = window.URL.createObjectURL(response);
+
+		const download = document.createElement('a');
+		download.href = url;
+		download.download = 'usync-export.zip';
+		document.body.appendChild(download);
+		download.dispatchEvent(new MouseEvent('click'));
+		download.remove();
+		window.URL.revokeObjectURL(url);
 	}
 }
 

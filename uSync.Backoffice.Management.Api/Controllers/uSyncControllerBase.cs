@@ -15,6 +15,6 @@ namespace uSync.Backoffice.Management.Api.Controllers;
 [Authorize(Policy = SyncAuthorizationPolicies.TreeAccessuSync)]
 [MapToApi(uSyncClient.Api.ApiName)]
 [JsonOptionsName(Constants.JsonOptionsNames.BackOffice)]
-public class uSyncControllerBase
+public class uSyncControllerBase : ControllerBase
 {
 }

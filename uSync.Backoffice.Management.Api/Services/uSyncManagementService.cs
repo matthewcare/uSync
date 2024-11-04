@@ -89,6 +89,11 @@ internal class uSyncManagementService : ISyncManagementService
                         Key = HandlerActions.Export.ToString(),
                         Label = $"{HandlerActions.Export}Clean",
                         Clean = true
+                    },
+                    new () {
+                        Key = HandlerActions.Export.ToString(),
+                        Label = $"{HandlerActions.Export}File",
+                        File = true,
                     }
                 ]
         };
@@ -273,5 +278,8 @@ internal class uSyncManagementService : ISyncManagementService
             _ => throw new InvalidOperationException($"Unknown method {action}"),
         };
     }
+
+    public Stream CompressExportFolder()
+        => _syncActionService.GetExportFolderAsStream();
 
 }

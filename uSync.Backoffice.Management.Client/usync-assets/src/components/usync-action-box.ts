@@ -39,6 +39,7 @@ export class uSyncActionBox extends LitElement {
 					key: e.detail.button.key,
 					force: e.detail.button.force,
 					clean: e.detail.button.clean,
+					file: e.detail.button.file,
 				},
 			}),
 		);

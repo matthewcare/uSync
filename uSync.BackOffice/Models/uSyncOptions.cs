@@ -26,6 +26,12 @@ public class uSyncOptions
     public bool Clean { get; set; }
 
     /// <summary>
+    ///  make the export or import produce or receive a file
+    /// </summary>
+    [DataMember(Name = "files")]
+    public bool Files { get; set; }
+
+    /// <summary>
     /// Name of the handler group to perform the actions on
     /// </summary>
     [DataMember(Name = "group")]

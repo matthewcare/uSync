@@ -36,4 +36,13 @@ export class uSyncActionDataSource implements SyncActionDataSource {
 			}),
 		);
 	}
+
+	async downloadFile(requestId: string) {
+		return await tryExecuteAndNotify(
+			this.#host,
+			ActionsService.download({
+				requestId: requestId,
+			}),
+		);
+	}
 }

@@ -20,6 +20,7 @@ public class SyncActionButton
 
     public bool Force { get; set; } = false;
     public bool Clean { get; set; } = false;
+    public bool File { get; set; } = false; 
 
     public List<SyncActionButton> Children { get; set; } = [];
 }

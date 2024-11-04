@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 using uSync.BackOffice.Models;
@@ -65,4 +66,5 @@ public interface ISyncActionService
     ///  finish the bulk process
     /// </summary>
     Task FinishProcessAsync(HandlerActions action, IEnumerable<uSyncAction> actions, string username);
+    Stream GetExportFolderAsStream();
 }

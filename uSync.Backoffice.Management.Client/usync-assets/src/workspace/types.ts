@@ -8,4 +8,5 @@ export type SyncPerformActionOptions = {
 	action: string;
 	force: boolean;
 	clean: boolean;
+	file: boolean;
 };

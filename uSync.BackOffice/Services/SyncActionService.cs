@@ -177,4 +177,8 @@ internal class SyncActionService : ISyncActionService
             username, action, actions.Count());
     }
 
+    public Stream GetExportFolderAsStream()
+    {
+        return _uSyncService.CompressFolder(_uSyncConfig.GetWorkingFolder());
+    }
 }

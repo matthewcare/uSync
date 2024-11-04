@@ -143,7 +143,7 @@ export const PerformActionResponseSchema = {
 } as const;
 
 export const SyncActionButtonSchema = {
-    required: ['children', 'clean', 'color', 'force', 'key', 'label', 'look'],
+    required: ['children', 'clean', 'color', 'file', 'force', 'key', 'label', 'look'],
     type: 'object',
     properties: {
         key: {
@@ -162,6 +162,9 @@ export const SyncActionButtonSchema = {
             type: 'boolean'
         },
         clean: {
+            type: 'boolean'
+        },
+        file: {
             type: 'boolean'
         },
         children: {
@@ -384,7 +387,7 @@ export const uSyncHandlerSetSettingsSchema = {
 } as const;
 
 export const uSyncOptionsSchema = {
-    required: ['clean', 'clientId', 'force', 'group', 'set'],
+    required: ['clean', 'clientId', 'files', 'force', 'group', 'set'],
     type: 'object',
     properties: {
         clientId: {
@@ -394,6 +397,9 @@ export const uSyncOptionsSchema = {
             type: 'boolean'
         },
         clean: {
+            type: 'boolean'
+        },
+        files: {
             type: 'boolean'
         },
         group: {

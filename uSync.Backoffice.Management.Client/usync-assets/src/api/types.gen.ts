@@ -91,6 +91,7 @@ export type SyncActionButton = {
     color: string;
     force: boolean;
     clean: boolean;
+    file: boolean;
     children: Array<(SyncActionButton)>;
 };
 
@@ -160,6 +161,7 @@ export type uSyncOptions = {
     clientId: string;
     force: boolean;
     clean: boolean;
+    files: boolean;
     group: string;
     set: string;
 };
@@ -199,6 +201,12 @@ export type uSyncSettings = {
 };
 
 export type GetActionsResponse = (Array<(SyncActionGroup)>);
+
+export type DownloadData = {
+    requestId?: string;
+};
+
+export type DownloadResponse = (((Blob | File)));
 
 export type PerformActionData = {
     requestBody?: (PerformActionRequest);

@@ -5,6 +5,7 @@ import {
 	uSyncSettingsDataSource,
 	uSyncMigrationDataSource,
 } from '@jumoo/uSync';
+import { FailedToNegotiateWithServerError } from '@microsoft/signalr/dist/esm/Errors';
 
 /**
  * Request object when peforming an action.
@@ -27,6 +28,9 @@ export type SyncPerformRequest = {
 
 	/** clean disk first (export) */
 	clean?: boolean;
+
+	/** produces or expects a file */
+	file?: boolean;
 
 	/** name of the set to use */
 	set?: string;
@@ -70,6 +74,7 @@ export class uSyncActionRepository extends UmbControllerBase {
 				group: request.group,
 				force: request.force ?? false,
 				clean: request.clean ?? false,
+				files: request.file ?? false,
 				clientId: request.clientId,
 				set: request.set ?? 'Default',
 			},
@@ -120,5 +125,9 @@ export class uSyncActionRepository extends UmbControllerBase {
 	 */
 	async copyLegacy() {
 		return await this.#migrartionDataSource.copyLegacy();
+	}
+
+	async downloadFile(requestId: string) {
+		return (await this.#actionDataSource.downloadFile(requestId)).data;
 	}
 }

@@ -6,6 +6,7 @@ export default defineConfig({
 		lib: {
 			entry: 'src/index.ts', // your web component source file
 			formats: ['es'],
+			fileName: 'uSync',
 		},
 		outDir: '../wwwroot/App_Plugins/uSync',
 		emptyOutDir: true,
