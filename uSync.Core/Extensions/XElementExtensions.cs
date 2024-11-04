@@ -5,6 +5,8 @@ using System.Xml.Linq;
 
 using Umbraco.Extensions;
 
+using uSync.Core.Extensions;
+
 namespace uSync.Core;
 
 public static class XElementExtensions
@@ -301,24 +303,21 @@ public static class XElementExtensions
     private static XmlWriterSettings _xmlWriterSettings = new XmlWriterSettings
     {
         NewLineChars = "\r\n",
-        Async = true
     };
 
     public static async Task<string> MakePlatformSafeHashAsync(this XElement node)
     {
         using (MemoryStream stream = new MemoryStream())
         {
-            // for consistency across platforms we need to harmonize line endings.
-            using (var writer = XmlWriter.Create(stream, _xmlWriterSettings))
+            await node.SaveAsync(stream, SaveOptions.None, CancellationToken.None);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using (HashAlgorithm hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? SHA1.Create() : MD5.Create())
             {
-                await node.SaveAsync(writer, CancellationToken.None);
-                stream.Seek(0, SeekOrigin.Begin);
-                using (HashAlgorithm hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? SHA1.Create() : MD5.Create())
-                {
-                    var hash = await hashAlgorithm.ComputeHashAsync(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLower();
-                }
+                var hash = await hashAlgorithm.ComputeHashAsync(stream);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
     }
+
 }
