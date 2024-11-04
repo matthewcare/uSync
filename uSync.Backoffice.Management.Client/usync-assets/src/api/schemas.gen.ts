@@ -259,6 +259,23 @@ export const SyncLegacyCheckResponseSchema = {
     additionalProperties: false
 } as const;
 
+export const UploadImportResultSchema = {
+    required: ['errors', 'success'],
+    type: 'object',
+    properties: {
+        success: {
+            type: 'boolean'
+        },
+        errors: {
+            type: 'array',
+            items: {
+                type: 'string'
+            }
+        }
+    },
+    additionalProperties: false
+} as const;
+
 export const uSyncActionViewSchema = {
     required: ['change', 'details', 'handler', 'itemType', 'key', 'name', 'success'],
     type: 'object',

@@ -45,4 +45,13 @@ export class uSyncActionDataSource implements SyncActionDataSource {
 			}),
 		);
 	}
+
+	async processUpload(fileId: string) {
+		return await tryExecuteAndNotify(
+			this.#host,
+			ActionsService.processUpload({
+				tempKey: fileId,
+			}),
+		);
+	}
 }

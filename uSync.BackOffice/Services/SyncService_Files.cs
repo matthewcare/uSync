@@ -34,20 +34,23 @@ public partial class SyncService
     }
 
     /// <inheritdoc/>>
-    public void DeCompressFile(string zipArchive, string target)
+    public void DeCompressFile(Stream zipArchive, string target)
     {
         if (string.IsNullOrWhiteSpace(target))
             throw new ArgumentException("No path");
 
-        if (zipArchive == null || !_syncFileService.FileExists(zipArchive))
+        if (zipArchive == null)
             throw new ArgumentException("missing zip");
 
         var resolvedTarget = _syncFileService.GetAbsPath(target);
 
         var fullTarget = Path.GetFullPath(resolvedTarget);
 
-        using (var zip = ZipFile.OpenRead(zipArchive))
+        using (var zip = new ZipArchive(zipArchive, ZipArchiveMode.Read))
         {
+            if (zip == null)
+                throw new Exception("Invalid zip file");
+
             if (!zip.Entries.Any(x => x.FullName.EndsWith(_uSyncConfig.Settings.DefaultExtension)))
                 throw new Exception("contains no uSync files");
 

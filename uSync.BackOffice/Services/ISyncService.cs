@@ -33,7 +33,7 @@ public interface ISyncService
     /// <summary>
     ///  decompress (unzip) an archive and put it on disk to be imported
     /// </summary>
-    void DeCompressFile(string zipArchive, string target);
+    void DeCompressFile(Stream zipArchive, string target);
 
     /// <summary>
     ///  run the export for a given folder

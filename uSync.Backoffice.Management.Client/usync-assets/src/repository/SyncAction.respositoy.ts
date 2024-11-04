@@ -5,7 +5,6 @@ import {
 	uSyncSettingsDataSource,
 	uSyncMigrationDataSource,
 } from '@jumoo/uSync';
-import { FailedToNegotiateWithServerError } from '@microsoft/signalr/dist/esm/Errors';
 
 /**
  * Request object when peforming an action.
@@ -129,5 +128,9 @@ export class uSyncActionRepository extends UmbControllerBase {
 
 	async downloadFile(requestId: string) {
 		return (await this.#actionDataSource.downloadFile(requestId)).data;
+	}
+
+	async processUpload(fileId: string) {
+		return (await this.#actionDataSource.processUpload(fileId)).data;
 	}
 }

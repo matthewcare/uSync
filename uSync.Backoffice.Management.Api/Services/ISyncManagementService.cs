@@ -10,4 +10,5 @@ public interface ISyncManagementService
     List<SyncActionGroup> GetActions();
     Func<SyncActionOptions, uSyncCallbacks, Task<SyncActionResult>> GetHandlerMethodAsync(HandlerActions action);
     Task<PerformActionResponse> PerformActionAsync(PerformActionRequest actionRequest);
+    UploadImportResult UnpackStream(Stream stream);
 }

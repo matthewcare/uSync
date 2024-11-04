@@ -78,6 +78,26 @@ internal class uSyncManagementService : ISyncManagementService
             Color = "default"
         };
 
+        var everythingImport = new SyncActionButton()
+        {
+            Key = HandlerActions.Import.ToString(),
+            Label = HandlerActions.Import.ToString(),
+            Look = "primary",
+            Color = "positive",
+            Children = [
+                    new () {
+                        Key = HandlerActions.Import.ToString(),
+                        Label = $"{HandlerActions.Import}Force",
+                        Force = true
+                    },
+                    new () {
+                        Key = HandlerActions.Import.ToString(),
+                        Label = $"{HandlerActions.Import}File",
+                        File = true
+                    }
+                ]
+        };
+
         var everythingExport = new SyncActionButton()
         {
             Key = HandlerActions.Export.ToString(),
@@ -100,7 +120,7 @@ internal class uSyncManagementService : ISyncManagementService
 
         // TODO: we need to load in additional action groups as needed from plugins.
         List<SyncActionButton> defaultButtons = [defaultReport, defaultImport, defaultExport];
-        List<SyncActionButton> everythingButtons = [defaultReport, defaultImport, everythingExport];
+        List<SyncActionButton> everythingButtons = [defaultReport, everythingImport, everythingExport];
 
         List<SyncActionGroup> actionGroups = [];
 
@@ -279,7 +299,17 @@ internal class uSyncManagementService : ISyncManagementService
         };
     }
 
+    /// <summary>
+    ///  compress the uSync folder into a zip file , return the stream
+    /// </summary>
+    /// <returns></returns>
     public Stream CompressExportFolder()
         => _syncActionService.GetExportFolderAsStream();
+
+    /// <summary>
+    ///  take a zip file as a stream expand it over the current uSync folder. 
+    /// </summary>
+    public UploadImportResult UnpackStream(Stream stream)
+        => _syncActionService.UnpackImportFromStream(stream);
 
 }

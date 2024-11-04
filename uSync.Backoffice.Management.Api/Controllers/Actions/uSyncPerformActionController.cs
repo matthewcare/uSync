@@ -7,8 +7,11 @@ using Microsoft.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 
+using Umbraco.Cms.Core.Services;
+
 using uSync.Backoffice.Management.Api.Models;
 using uSync.Backoffice.Management.Api.Services;
+using uSync.BackOffice.Models;
 
 namespace uSync.Backoffice.Management.Api.Controllers.Actions;
 
@@ -17,10 +20,12 @@ namespace uSync.Backoffice.Management.Api.Controllers.Actions;
 public class uSyncPerformActionController : uSyncControllerBase
 {
     private readonly ISyncManagementService _managementService;
+    private readonly ITemporaryFileService _temporaryFileService;
 
-    public uSyncPerformActionController(ISyncManagementService managementService)
+    public uSyncPerformActionController(ISyncManagementService managementService, ITemporaryFileService temporaryFileService)
     {
         _managementService = managementService;
+        _temporaryFileService = temporaryFileService;
     }
 
     [HttpPost("Perform")]
@@ -55,5 +60,19 @@ public class uSyncPerformActionController : uSyncControllerBase
         {
             FileDownloadName = filename
         };
+    }
+
+    [HttpPost("ProcessUpload")]
+    [ProducesResponseType<UploadImportResult>(StatusCodes.Status200OK)]
+    [ProducesErrorResponseType(typeof(NotFoundResult))]
+    public async Task<IActionResult> ProcessUpload(Guid tempKey)
+    {
+        var tempFile = await _temporaryFileService.GetAsync(tempKey);
+        if (tempFile is null) return NotFound();
+
+        using (var stream = tempFile.OpenReadStream())
+        {
+            return Ok(_managementService.UnpackStream(stream));
+        }
     }
 }

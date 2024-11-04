@@ -42,6 +42,10 @@ export default {
 
 		errorHeader:
 			'This item encountered an error during the process, the details are below:',
+
+		uploadIntro: 'Select a zip file containing uSync files that you want to upload',
+		uploadSuccess: 'The files have been uploaded and extracted to the uSync folder',
+		uploadError: 'There was an error uploading the files',
 	},
 	uSyncSettings: {
 		settings: 'uSync Settings',

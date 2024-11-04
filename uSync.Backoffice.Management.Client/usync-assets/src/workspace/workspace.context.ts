@@ -22,6 +22,9 @@ import {
 	UMB_WORKSPACE_CONTEXT,
 	UmbWorkspaceContext,
 } from '@umbraco-cms/backoffice/workspace';
+import { UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
+import { USYNC_IMPORT_MODAL } from './dialogs';
+import { Underline } from '@umbraco-cms/backoffice/external/tiptap';
 
 /**
  * Context for getting and seting up actions.
@@ -175,7 +178,14 @@ export class uSyncWorkspaceContext
 		// pre-action checks, for files.
 		if (options.file && options.action === 'Import') {
 			// imports need to open the file dialog to get the file first.
-			console.log('file dialog here...');
+			const uploadResult = await this.uploadFile();
+			if (!uploadResult) {
+				console.log(uploadResult);
+				this.#completed.setValue(true);
+				this.#working.setValue(false);
+				this.#results.setValue([]);
+				return;
+			}
 		}
 
 		do {
@@ -216,6 +226,23 @@ export class uSyncWorkspaceContext
 
 		this.#completed.setValue(true);
 		this.#working.setValue(false);
+	}
+
+	async uploadFile() {
+		const modalManager = await this.getContext(UMB_MODAL_MANAGER_CONTEXT);
+		if (!modalManager) return;
+
+		const importModal = modalManager.open(this, USYNC_IMPORT_MODAL, {
+			data: {},
+		});
+
+		const data = await importModal.onSubmit().catch(() => {
+			return false;
+		});
+
+		if (!data) return false;
+
+		return true;
 	}
 
 	async downloadFile(requestId: string) {

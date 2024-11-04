@@ -1,6 +1,9 @@
 import { uSyncConstants, SyncLegacyFilesConditionConfig } from '@jumoo/uSync';
 
+import { manifests as dialogManifests } from './dialogs/manifest.js';
+
 import './components/index.js';
+import './dialogs/index.js';
 
 const workspaceAlias = uSyncConstants.workspace.alias;
 
@@ -108,4 +111,10 @@ const workspaceViews: Array<UmbExtensionManifest> = [
 
 const workspaceActions: Array<UmbExtensionManifest> = [];
 
-export const manifests = [context, workspace, ...workspaceViews, ...workspaceActions];
+export const manifests = [
+	context,
+	workspace,
+	...workspaceViews,
+	...workspaceActions,
+	...dialogManifests,
+];

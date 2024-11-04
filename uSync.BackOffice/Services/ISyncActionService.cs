@@ -66,5 +66,15 @@ public interface ISyncActionService
     ///  finish the bulk process
     /// </summary>
     Task FinishProcessAsync(HandlerActions action, IEnumerable<uSyncAction> actions, string username);
+
+    /// <summary>
+    ///  returns the export folder zipped up as a stream
+    /// </summary>
+    /// <returns></returns>
     Stream GetExportFolderAsStream();
+
+    /// <summary>
+    ///  unpacks a zip archive (stream) to disk, checks it and copies it over the existing uSync folder. 
+    /// </summary>
+    UploadImportResult UnpackImportFromStream(Stream stream);
 }

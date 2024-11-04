@@ -118,6 +118,11 @@ export type SyncLegacyCheckResponse = {
     latestVersion: string;
 };
 
+export type UploadImportResult = {
+    success: boolean;
+    errors: Array<(string)>;
+};
+
 export type uSyncActionView = {
     key: string;
     name: string;
@@ -213,6 +218,12 @@ export type PerformActionData = {
 };
 
 export type PerformActionResponse2 = ((PerformActionResponse));
+
+export type ProcessUploadData = {
+    tempKey?: string;
+};
+
+export type ProcessUploadResponse = ((UploadImportResult));
 
 export type CheckLegacyResponse = ((SyncLegacyCheckResponse));
 

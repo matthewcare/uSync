@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 using System;
 using System.Collections.Generic;
@@ -29,18 +31,32 @@ internal class SyncActionService : ISyncActionService
     private readonly ISyncHandlerFactory _handlerFactory;
     private readonly ISyncFileService _syncFileService;
 
+    private readonly string _uSyncTempPath;
+
     public SyncActionService(
         ILogger<SyncActionService> logger,
         ISyncConfigService uSyncConfig,
         ISyncService uSyncService,
         ISyncHandlerFactory handlerFactory,
-        ISyncFileService syncFileService)
+        ISyncFileService syncFileService,
+        Umbraco.Cms.Core.Hosting.IHostingEnvironment hostingEnvironment,
+        IWebHostEnvironment webHostEnvironment)
     {
         _uSyncConfig = uSyncConfig;
         _uSyncService = uSyncService;
         _handlerFactory = handlerFactory;
         _syncFileService = syncFileService;
         _logger = logger;
+
+        // temp folder, if this is running in the background, we might not 
+        // have the hostingEnvironment available.
+        _uSyncTempPath =
+            Path.GetFullPath(
+                Path.Combine(
+                    hostingEnvironment?.LocalTempPath ?? 
+                    webHostEnvironment.ContentRootPath
+                , "uSync", "FileImport")
+                );
     }
 
     public IEnumerable<SyncHandlerView> GetActionHandlers(HandlerActions action, uSyncOptions? options)
@@ -180,5 +196,47 @@ internal class SyncActionService : ISyncActionService
     public Stream GetExportFolderAsStream()
     {
         return _uSyncService.CompressFolder(_uSyncConfig.GetWorkingFolder());
+    }
+
+    public UploadImportResult UnpackImportFromStream(Stream stream)
+    {
+        var tempFolder = Path.Combine(_uSyncTempPath, Path.GetFileNameWithoutExtension(Path.GetRandomFileName())) 
+            ?? $"{_uSyncTempPath}{Path.DirectorySeparatorChar}{Path.GetFileNameWithoutExtension(Path.GetRandomFileName()) ?? Guid.NewGuid().ToString()}";
+
+        Directory.CreateDirectory(tempFolder);
+
+        try
+        {
+            _uSyncService.DeCompressFile(stream, tempFolder);
+
+            var errors = _syncFileService.VerifyFolder(tempFolder,
+                _uSyncConfig.Settings.DefaultExtension);
+
+            if (errors.Count > 0)
+            {
+                return new UploadImportResult
+                {
+                    Success = false,
+                    Errors = errors
+                };
+            }
+
+            _uSyncService.ReplaceFiles(tempFolder, _uSyncConfig.GetWorkingFolder(), true);
+
+            return new UploadImportResult
+            {
+                Success = true
+            };
+        }
+        catch
+        {
+            throw;
+        }
+        finally
+        {
+            _syncFileService.DeleteFolder(tempFolder);
+        }
+
+        throw new Exception("Failed to import");
     }
 }

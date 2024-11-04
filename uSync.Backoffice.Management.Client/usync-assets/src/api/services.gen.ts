@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { GetActionsResponse, DownloadData, DownloadResponse, PerformActionData, PerformActionResponse2, CheckLegacyResponse, CopyLegacyResponse, IgnoreLegacyResponse, GetAddOnsResponse, GetAddonSplashResponse, GetHandlerSetSettingsData, GetHandlerSetSettingsResponse, GetSettingsResponse } from './types.gen';
+import type { GetActionsResponse, DownloadData, DownloadResponse, PerformActionData, PerformActionResponse2, ProcessUploadData, ProcessUploadResponse, CheckLegacyResponse, CopyLegacyResponse, IgnoreLegacyResponse, GetAddOnsResponse, GetAddonSplashResponse, GetHandlerSetSettingsData, GetHandlerSetSettingsResponse, GetSettingsResponse } from './types.gen';
 
 export class ActionsService {
     /**
@@ -45,6 +45,22 @@ export class ActionsService {
             url: '/umbraco/usync/api/v1/Perform',
             body: data.requestBody,
             mediaType: 'application/json'
+        });
+    }
+    
+    /**
+     * @param data The data for the request.
+     * @param data.tempKey
+     * @returns unknown OK
+     * @throws ApiError
+     */
+    public static processUpload(data: ProcessUploadData = {}): CancelablePromise<ProcessUploadResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/umbraco/usync/api/v1/ProcessUpload',
+            query: {
+                tempKey: data.tempKey
+            }
         });
     }
     
