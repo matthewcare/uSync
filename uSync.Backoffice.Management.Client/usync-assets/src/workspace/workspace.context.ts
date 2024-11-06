@@ -24,7 +24,6 @@ import {
 } from '@umbraco-cms/backoffice/workspace';
 import { UMB_MODAL_MANAGER_CONTEXT } from '@umbraco-cms/backoffice/modal';
 import { USYNC_IMPORT_MODAL } from './dialogs';
-import { Underline } from '@umbraco-cms/backoffice/external/tiptap';
 
 /**
  * Context for getting and seting up actions.

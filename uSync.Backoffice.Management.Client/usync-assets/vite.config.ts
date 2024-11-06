@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
 	build: {
@@ -19,13 +18,13 @@ export default defineConfig({
 	base: '/App_Plugins/uSync/',
 	mode: 'production',
 	plugins: [
-		viteStaticCopy({
-			targets: [
-				{
-					src: 'src/icons/svg/*.js',
-					dest: 'icons',
-				},
-			],
-		}),
+		// viteStaticCopy({
+		// 	targets: [
+		// 		{
+		// 			src: 'src/icons/svg/*.js',
+		// 			dest: 'icons',
+		// 		},
+		// 	],
+		// }),
 	],
 });

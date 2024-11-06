@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import { viteStaticCopy } from 'vite-plugin-static-copy';
 import dts from 'vite-plugin-dts';
 
 /**
@@ -23,15 +22,5 @@ export default defineConfig({
 	},
 	base: '/usync/',
 	mode: 'production',
-	plugins: [
-		dts(),
-		viteStaticCopy({
-			targets: [
-				{
-					src: 'src/icons/svg/*.js',
-					dest: 'icons',
-				},
-			],
-		}),
-	],
+	plugins: [dts()],
 });

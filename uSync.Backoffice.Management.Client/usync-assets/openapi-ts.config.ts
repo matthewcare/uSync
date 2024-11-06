@@ -7,13 +7,18 @@ export default defineConfig({
 		format: 'prettier',
 		path: 'src/api',
 	},
-	services: {
-		asClass: true,
-	},
-	schemas: {
-		type: 'json',
-	},
-	types: {
-		enums: 'javascript',
-	},
+	plugins: [
+		{
+			name: '@hey-api/schemas',
+			type: 'json',
+		},
+		{
+			name: '@hey-api/types',
+			enums: 'javascript',
+		},
+		{
+			name: '@hey-api/services',
+			asClass: true,
+		},
+	],
 });
