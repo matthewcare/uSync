@@ -2,9 +2,9 @@ name: dotnet core build
 
 on:
   push:
-    branches: [v15/main]
+    branches: [v15/dev]
   pull_request:
-    branches: [v15/main]
+    branches: [v15/dev]
 
 env:
   config: Release
