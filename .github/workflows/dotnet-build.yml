@@ -44,7 +44,7 @@ jobs:
     needs: version
 
     env:
-      solution_name: ./uSyncBuild.sln
+      solution_name: ./uSync.sln
       test_project: ./uSync.Tests/uSync.tests.csproj
       schema_gen_project: ./uSync.SchemaGenerator/uSync.SchemaGenerator.csproj
 
@@ -57,7 +57,7 @@ jobs:
       - name: Install .Net core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.x
 
       - name: restore
         run: dotnet restore ${{ env.solution_name}}
