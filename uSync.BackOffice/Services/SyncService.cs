@@ -40,7 +40,6 @@ public delegate void SyncEventCallback(SyncProgressSummary summary);
 /// </summary>
 public partial class SyncService : ISyncService
 {
-
     private readonly ILogger<SyncService> _logger;
     private readonly ILoggerFactory _loggerFactory;
 
@@ -190,28 +189,15 @@ public partial class SyncService : ISyncService
         handlerOptions ??= new SyncHandlerOptions();
         handlerOptions.Action = HandlerActions.Import;
         var handlers = _handlerFactory.GetValidHandlers(handlerOptions);
-        return await ImportAsync(folders, force, handlers, callbacks);
+        return await ImportAsync(folders, force, handlers, handlerOptions, callbacks);
     }
 
     /// <inheritdoc/>>
-    public async Task<IEnumerable<uSyncAction>> ImportAsync(string[] folders, bool force, IEnumerable<HandlerConfigPair> handlers, uSyncCallbacks? callbacks)
+    public async Task<IEnumerable<uSyncAction>> ImportAsync(string[] folders, bool force, IEnumerable<HandlerConfigPair> handlers, SyncHandlerOptions handlerOptions, uSyncCallbacks? callbacks)
     {
         // if its blank, we just throw it back empty. 
         if (handlers == null || !handlers.Any()) return [];
 
-        try
-        {
-            await _importSemaphoreLock.WaitAsync();
-            return await Do_ImportAsync(folders, force, handlers, callbacks);
-        }
-        finally
-        {
-            _importSemaphoreLock.Release();
-        }
-    }
-
-    private async Task<IEnumerable<uSyncAction>> Do_ImportAsync(string[] folders, bool force, IEnumerable<HandlerConfigPair> handlers, uSyncCallbacks? callbacks)
-    {
         var sw = Stopwatch.StartNew();
 
         using (var pause = _mutexService.ImportPause(true))
@@ -233,7 +219,10 @@ public partial class SyncService : ISyncService
             var importOptions = new uSyncImportOptions
             {
                 Flags = force ? SerializerFlags.Force : SerializerFlags.None,
-                Callbacks = callbacks
+                Callbacks = callbacks,
+                Folders = folders,
+                HandlerSet = handlerOptions.Set,
+                UserId = handlerOptions.UserId,
             };
 
             foreach (var configuredHandler in handlers)
@@ -248,9 +237,7 @@ public partial class SyncService : ISyncService
 
                 callbacks?.Callback?.Invoke(summary);
 
-                var handlerFolders = folders.Select(x => $"{x}/{handler.DefaultFolder}").ToArray();
-                var handlerActions = await handler.ImportAllAsync(handlerFolders, handlerSettings, importOptions);
-                // handler.ImportAll(handlerFolders, handlerSettings, importOptions);
+                var handlerActions = await this.ImportHandlerAsync(handler.Alias, importOptions);
 
                 actions.AddRange(handlerActions);
 
@@ -259,20 +246,6 @@ public partial class SyncService : ISyncService
                     handlerActions.ContainsErrors());
 
             }
-
-
-            // postImport things (mainly cleaning up folders)
-
-            summary.Increment();
-            summary.UpdateHandler("Post Import", HandlerStatus.Pending, "Post Import Actions", 0);
-
-            callbacks?.Callback?.Invoke(summary);
-
-            actions.AddRange(await PerformPostImportAsync(handlers, actions));
-
-            sw.Stop();
-            summary.UpdateHandler("Post Import", HandlerStatus.Complete, "Import Completed", 0);
-            callbacks?.Callback?.Invoke(summary);
 
             // fire complete
             await _mutexService.FireBulkCompleteAsync(new uSyncImportCompletedNotification(actions));
@@ -499,8 +472,15 @@ public partial class SyncService : ISyncService
             var handlers = _handlerFactory
                 .GetValidHandlersByEntityType(e.EntityTypes, e.HandlerOptions);
 
+            var syncHandlerOptions = new SyncHandlerOptions
+            {
+                UserId = -1,
+                Set = _uSyncConfig.Settings.DefaultSet,
+                Action = HandlerActions.Import,
+            };
+
             if (handlers.Any())
-                this.ImportAsync([e.Folder], false, handlers, null).Wait();
+                this.ImportAsync([e.Folder], false, handlers, syncHandlerOptions, null).Wait();
         }
     }
 

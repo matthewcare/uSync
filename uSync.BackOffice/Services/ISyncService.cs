@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
+using uSync.BackOffice.Configuration;
 using uSync.BackOffice.Models;
 using uSync.BackOffice.SyncHandlers.Interfaces;
 using uSync.BackOffice.SyncHandlers.Models;
@@ -67,7 +68,7 @@ public interface ISyncService
     /// <summary>
     ///  import from the given folders 
     /// </summary>
-    Task<IEnumerable<uSyncAction>> ImportAsync(string[] folders, bool force, IEnumerable<HandlerConfigPair> handlers, uSyncCallbacks? callbacks);
+    Task<IEnumerable<uSyncAction>> ImportAsync(string[] folders, bool force, IEnumerable<HandlerConfigPair> handlers, SyncHandlerOptions options, uSyncCallbacks? callbacks);
 
     /// <summary>
     ///  import for a given handler. 
@@ -155,7 +156,11 @@ public interface ISyncService
 
     [Obsolete("use ImportHandlerAsync will be removed in v16")]
     IEnumerable<uSyncAction> Import(string[] folders, bool force, IEnumerable<HandlerConfigPair> handlers, uSyncCallbacks? callbacks)
-        => ImportAsync(folders, force, handlers, callbacks).Result;
+        => ImportAsync(folders, force, handlers, new SyncHandlerOptions
+        {
+            Set = "default",
+            UserId = -1,
+        }, callbacks).Result;
 
     [Obsolete("use ImportHandlerAsync will be removed in v16")]
     IEnumerable<uSyncAction> ImportHandler(string handlerAlias, uSyncImportOptions options)
