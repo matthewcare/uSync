@@ -260,3 +260,4 @@ $RECYCLE.BIN/
 
 # local solution (has website in it)
 /uSync.*.sln
+/uSync.Backoffice.Management.Client/usync-assets/tsconfig.dist.tsbuildinfo
