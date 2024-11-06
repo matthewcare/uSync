@@ -2,9 +2,9 @@ name: dotnet core build
 
 on:
   push:
-    branches: [v14/main]
+    branches: [v15/main]
   pull_request:
-    branches: [v14/main]
+    branches: [v15/main]
 
 env:
   config: Release
@@ -70,6 +70,10 @@ jobs:
 
       - name: Generate AppSettings Schema
         run: dotnet run -c ${{env.Config}} --project ${{ env.schema_gen_project}}
+
+      - name: Stamp version on package
+        working-directory: ./uSync.Backoffice.Management.Client/usync-assets
+        run: npm version ${{ needs.version.outputs.version_string }}
 
   package-up:
     runs-on: windows-latest
