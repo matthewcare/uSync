@@ -1,9 +1,10 @@
+next-version: 15.0.0
 assembly-versioning-scheme: MajorMinorPatch
 mode: ContinuousDeployment
 branches:
   main:
     mode: ContinuousDeployment
-    tag: ''
+    tag: ""
     regex: ^v12\/main$
   pull-request:
     mode: ContinuousDeployment
