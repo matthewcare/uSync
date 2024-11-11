@@ -15,13 +15,13 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
 {
     private readonly IContentTypeService _contentTypeService;
     private readonly Lazy<SyncValueMapperCollection> _mapperCollection;
-    private readonly ILogger<BlockGridMapper> _logger;
+    private readonly ILogger<SyncBlockMapperBase<TBlockValue>> _logger;
 
     public SyncBlockMapperBase(
         IEntityService entityService,
         IContentTypeService contentTypeService,
         Lazy<SyncValueMapperCollection> mapperCollection,
-        ILogger<BlockGridMapper> logger)
+        ILogger<SyncBlockMapperBase<TBlockValue>> logger)
         : base(entityService)
     {
         _contentTypeService = contentTypeService;

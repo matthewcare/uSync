@@ -16,7 +16,7 @@ internal class BlockListMapper : SyncBlockMapperBase<BlockListValue>, ISyncMappe
         IEntityService entityService,
         IContentTypeService contentTypeService,
         Lazy<SyncValueMapperCollection> mapperCollection,
-        ILogger<BlockGridMapper> logger)
+        ILogger<BlockListMapper> logger)
         : base(entityService, contentTypeService, mapperCollection, logger)
     {
     }
