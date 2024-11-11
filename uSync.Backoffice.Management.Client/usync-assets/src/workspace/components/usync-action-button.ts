@@ -101,7 +101,6 @@ export class SyncActionButtonElement extends UmbLitElement {
 	}
 
 	static styles = css`
-		// TODO: Same hack as in the core, should use proper symbol (when one is avalible.)
 		.expand-symbol {
 			transform: rotate(90deg);
 		}

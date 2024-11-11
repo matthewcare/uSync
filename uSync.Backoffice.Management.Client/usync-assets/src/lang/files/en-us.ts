@@ -29,6 +29,20 @@ export default {
 		changeDetail: 'Detail',
 		changeCount: '{0} items',
 
+		legacyInfo: `<p>uSync has found a legacy uSync folder at <strong>%0%</strong>.<br />
+						Its likely that the content in it will need coverting in someway</p>`,
+
+		legacyObsolete: `<h4>Obsolete DataTypes</h4>
+				<ul>%0%</ul>
+				<p>You can convert these DataTypes using
+					<a href="https://github.com/Jumoo/uSyncMigrations" target="_blank">uSync.Migrations</a><br />
+					<em>(In the full uSync release conversion will happen here.)</em></p>`,
+
+		legacyCopy: `<h4>Copy to uSync/v14</h4>
+					<p>You can copy your %0% folder to the ~/uSync/v14 folder<br />and run an import.</p>
+					<p>If nothing needs converting, then everything should import.</p>
+					<p><strong>Remove or rename the %0% folder to prevent this	popup</strong></p>`,
+
 		legacyBanner:
 			'This site contains files from a previous version of uSync, view the details in the legacy tab.',
 
