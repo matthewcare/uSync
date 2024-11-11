@@ -15,6 +15,7 @@ namespace uSync.Community.Contrib.Mappers;
 /// <summary>
 ///  value mapper for Contentment content blocks. 
 /// </summary>
+[Obsolete("Contentment Content blocks are not being ported.")]
 public class ContentmentContentBlocks : SyncNestedJsonValueMapperBase, ISyncMapper
 {
     public ContentmentContentBlocks(IEntityService entityService, Lazy<SyncValueMapperCollection> mapperCollection, IContentTypeService contentTypeService, IDataTypeService dataTypeService)

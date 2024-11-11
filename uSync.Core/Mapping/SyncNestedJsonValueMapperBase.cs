@@ -10,6 +10,7 @@ namespace uSync.Core.Mapping;
 /// <summary>
 ///  Handle nested values that are in JSON and follow certain nested content like patterns.
 /// </summary>
+[Obsolete("Nested Content has been removed from umbraco")]
 public abstract class SyncNestedJsonValueMapperBase : SyncNestedValueMapperBase
 {
     protected SyncNestedJsonValueMapperBase(IEntityService entityService,

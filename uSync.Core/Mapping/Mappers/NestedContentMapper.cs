@@ -10,6 +10,7 @@ using uSync.Core.Extensions;
 
 namespace uSync.Core.Mapping;
 
+[Obsolete("Nested Content has been removed from Umbraco - classes will be removed in uSync 16")]
 public class NestedContentMapper : SyncNestedJsonValueMapperBase, ISyncMapper
 {
     private readonly string _docTypeAliasValue = "ncContentTypeAlias";

@@ -36,6 +36,7 @@ namespace uSync8.Community.Contrib.Mappers;
 ///   do this. 
 ///  </para>
 /// </remarks>
+[Obsolete("The grid is obsolete in Umbraco v14")]
 public class DocTypeGridMapper : SyncNestedValueMapperBase, ISyncMapper
 {
     private readonly string docTypeAliasValue = "dtgeContentTypeAlias";

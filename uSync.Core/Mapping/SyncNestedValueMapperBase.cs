@@ -16,6 +16,7 @@ namespace uSync.Core.Mapping;
 ///  this base class can be used to kickstart a value mapper for anything
 ///  that stores other doctypes inside of its own values (NestedContent, DTGE)
 /// </remarks>
+[Obsolete("Nested Content has been removed from Umbraco - classes will be removed in uSync 16")]
 public abstract class SyncNestedValueMapperBase : SyncValueMapperBase
 {
     protected readonly IContentTypeService contentTypeService;
