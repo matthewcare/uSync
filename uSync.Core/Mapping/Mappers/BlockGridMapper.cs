@@ -5,20 +5,16 @@ using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Services;
 
 namespace uSync.Core.Mapping.Mappers;
-
-internal class BlockListMapper : SyncBlockMapperBase<BlockListValue>, ISyncMapper
+internal class BlockGridMapper : SyncBlockMapperBase<BlockGridValue>, ISyncMapper
 {
-    public override string Name => "NuBlock List mapper";
+    public override string Name => "NuBlock Grid Mapper";
+    public override string[] Editors => [Constants.PropertyEditors.Aliases.BlockGrid];
 
-    public override string[] Editors => [Constants.PropertyEditors.Aliases.BlockList];
-
-    public BlockListMapper(
+    public BlockGridMapper(
         IEntityService entityService,
         IContentTypeService contentTypeService,
         Lazy<SyncValueMapperCollection> mapperCollection,
-        ILogger<BlockGridMapper> logger)
+        ILogger<BlockGridMapper> logger) 
         : base(entityService, contentTypeService, mapperCollection, logger)
-    {
-    }
-
+    {  }
 }

@@ -26,6 +26,7 @@ public static class JsonTextExtensions
         {
             new JsonStringEnumConverter(),
             new JsonObjectConverter(),
+            new JsonBlockValueConverter(),
             new JsonUdiConverter(),
             new JsonUdiRangeConverter(),
             new JsonBooleanConverter(),
