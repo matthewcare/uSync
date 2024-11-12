@@ -3,10 +3,10 @@
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.Blocks;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 using uSync.Core.Dependency;
 using uSync.Core.Extensions;
-using uSync.Core.Mapping.Mappers;
 
 namespace uSync.Core.Mapping;
 
@@ -45,7 +45,8 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
     private async Task<object?> GetExportProperty(object? value, string propertyEditorAlias)
     {
         if (_mapperCollection.Value is null) return value;
-        return await _mapperCollection.Value.GetExportValueAsync(value?.ToString() ?? string.Empty, propertyEditorAlias);
+        var result = await _mapperCollection.Value.GetExportValueAsync(value?.ToString() ?? string.Empty, propertyEditorAlias);
+        return result.ConvertToJsonNode()?.ExpandAllJsonInToken() ?? result;
     }
 
     private async Task<string?> ProcessBlockValuesAsync(string value, Func<object?, string, Task<object?>> GetValueMethod)
@@ -53,14 +54,14 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
         var blockValue = GetBlockValue(value);
         if (blockValue == null) return value;
 
-        foreach (var contentItem in blockValue.ContentData)
+        List<BlockItemData> blocks = [
+            ..blockValue.ContentData,
+            ..blockValue.SettingsData
+        ];
+
+        foreach (var contentItem in blocks)
         {
             await ProcessBlockData(contentItem, GetValueMethod);
-        }
-
-        foreach (var settingsItem in blockValue.SettingsData)
-        {
-            await ProcessBlockData(settingsItem, GetValueMethod);
         }
 
         if (blockValue.Expose.Count == 0)
@@ -104,14 +105,22 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error getting block value");
+            _logger.LogError(ex, "Error getting block value {value}", value);
             return null;
         }
     }
 
     public override async Task<IEnumerable<uSyncDependency>> GetDependenciesAsync(object value, string editorAlias, DependencyFlags flags)
     {
-        var blockValue = GetBlockValue(value?.ToString() ?? string.Empty);
+        var stringValue = value.ToString();
+        if (value is BlockPropertyValue blockPropertyValue)
+        {
+            stringValue = blockPropertyValue.Value?.ToString() ?? string.Empty;
+        }
+        
+        if (string.IsNullOrWhiteSpace(stringValue)) return [];
+
+        var blockValue = GetBlockValue(stringValue);
         if (blockValue == null) return [];
 
         var dependencies = new List<uSyncDependency>();
@@ -134,6 +143,14 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
         var dependencies = new List<uSyncDependency>();
         var contentType = await GetContentType(block.ContentTypeKey);
         if (contentType is null) return dependencies;
+
+        if (flags.HasFlag(DependencyFlags.IncludeDependencies))
+        {
+            // the content type for the block
+            var contentTypeDependency = this.CreateDependency(contentType.GetUdi(), flags);
+            dependencies.AddNotNull(contentTypeDependency);
+        }
+
         foreach (var value in block.Values)
         {
             var property = contentType.CompositionPropertyTypes.FirstOrDefault(x => x.Alias == value.Alias);

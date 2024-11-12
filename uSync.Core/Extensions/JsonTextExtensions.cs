@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using Json.More;
+
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -246,15 +248,15 @@ public static class JsonTextExtensions
     /// </summary>
     public static bool TryExpandJsonNodeValue(this JsonNode value, [MaybeNullWhen(false)] out JsonNode node)
     {
-        node = value;
-        if (value == null) return false;
+        node = value?.DeepClone() ?? null;
+        if (node == null) return false;
 
-        switch (value.GetValueKind())
+        switch (node.GetValueKind())
         {
             case JsonValueKind.String:
-                return value.ToString().TryConvertToJsonNode(out node);
+                return node.ToString().TryConvertToJsonNode(out node);
             case JsonValueKind.Object:
-                var jsonObject = value.AsObject();
+                var jsonObject = node.AsObject();
                 foreach (var property in jsonObject.ToList())
                 {
                     if (property.Value?.TryExpandJsonNodeValue(out var innerNode) is true)
@@ -265,8 +267,8 @@ public static class JsonTextExtensions
                 node = jsonObject;
                 return true;
             case JsonValueKind.Array:
-                var jsonArray = value.AsArray();
-                for (int n = 0; n <= jsonArray.Count; n++)
+                var jsonArray = node.AsArray();
+                for (int n = 0; n < jsonArray.Count; n++)
                 {
                     if (jsonArray[n]?.TryExpandJsonNodeValue(out var innerNode) is true)
                     {
