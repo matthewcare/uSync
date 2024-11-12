@@ -248,37 +248,45 @@ public static class JsonTextExtensions
     /// </summary>
     public static bool TryExpandJsonNodeValue(this JsonNode value, [MaybeNullWhen(false)] out JsonNode node)
     {
-        node = value?.DeepClone() ?? null;
-        if (node == null) return false;
-
-        switch (node.GetValueKind())
+        try
         {
-            case JsonValueKind.String:
-                return node.ToString().TryConvertToJsonNode(out node);
-            case JsonValueKind.Object:
-                var jsonObject = node.AsObject();
-                foreach (var property in jsonObject.ToList())
-                {
-                    if (property.Value?.TryExpandJsonNodeValue(out var innerNode) is true)
+            node = value?.DeepClone() ?? null;
+            if (node == null) return false;
+
+            switch (node.GetValueKind())
+            {
+                case JsonValueKind.String:
+                    return node.ToString().TryConvertToJsonNode(out node);
+                case JsonValueKind.Object:
+                    var jsonObject = node.AsObject();
+                    foreach (var property in jsonObject.ToList())
                     {
-                        jsonObject[property.Key] = innerNode;
+                        if (property.Value?.TryExpandJsonNodeValue(out var innerNode) is true)
+                        {
+                            jsonObject[property.Key] = innerNode;
+                        }
                     }
-                }
-                node = jsonObject;
-                return true;
-            case JsonValueKind.Array:
-                var jsonArray = node.AsArray();
-                for (int n = 0; n < jsonArray.Count; n++)
-                {
-                    if (jsonArray[n]?.TryExpandJsonNodeValue(out var innerNode) is true)
+                    node = jsonObject;
+                    return true;
+                case JsonValueKind.Array:
+                    var jsonArray = node.AsArray();
+                    for (int n = 0; n < jsonArray.Count; n++)
                     {
-                        jsonArray[n] = innerNode;
+                        if (jsonArray[n]?.TryExpandJsonNodeValue(out var innerNode) is true)
+                        {
+                            jsonArray[n] = innerNode;
+                        }
                     }
-                }
-                node = jsonArray;
-                return true;
-            default:
-                return true;
+                    node = jsonArray;
+                    return true;
+                default:
+                    return true;
+            }
+        }
+        catch
+        {
+            node = null;
+            return false;
         }
     }
 
