@@ -7,7 +7,7 @@ namespace uSync.BackOffice;
 /// </summary>
 public class uSync
 {
-    internal static Version Version => typeof(uSync).Assembly.GetName().Version ?? new Version(1, 0, 0);
+    internal static Version Version => typeof(uSync).Assembly.GetName().Version ?? new Version(15, 0, 0);
 
     /// <summary>
     ///  name of the app

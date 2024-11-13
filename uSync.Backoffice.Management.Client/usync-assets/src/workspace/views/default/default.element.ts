@@ -146,6 +146,8 @@ export class uSyncDefaultViewElement extends UmbLitElement {
 	}
 
 	#renderActions() {
+        if (!this._actions || !Array.isArray(this._actions)) return nothing;
+
 		var actions = this._actions?.map((group) => {
 			return html`
 				<usync-action-box

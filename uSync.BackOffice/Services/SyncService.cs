@@ -384,7 +384,7 @@ public partial class SyncService : ISyncService
         {
             var versionFile = Path.Combine(_syncFileService.GetAbsPath(folder), $"usync.{_uSyncConfig.Settings.DefaultExtension}");
             var versionNode = new XElement("uSync",
-                new XAttribute("version", typeof(uSync).Assembly.GetName()?.Version?.ToString() ?? "14.0.0"),
+                new XAttribute("version", typeof(uSync).Assembly.GetName()?.Version?.ToString() ?? "15.0.0"),
                 new XAttribute("format", Core.uSyncConstants.FormatVersion));
             // remove date, we don't really care, and it causes unnecessary git changes.
 

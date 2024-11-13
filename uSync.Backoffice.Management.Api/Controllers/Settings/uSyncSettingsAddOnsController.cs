@@ -34,12 +34,12 @@ public class uSyncSettingsAddOnsController : uSyncControllerBase
         try
         {
             var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.GetAssemblyFile().FullName);
-            var productVersion = SemVersion.Parse(fileVersionInfo.ProductVersion ?? assembly.GetName()?.Version?.ToString(3) ?? "14.2.0");
+            var productVersion = SemVersion.Parse(fileVersionInfo.ProductVersion ?? assembly.GetName()?.Version?.ToString(3) ?? "15.0.0");
             return productVersion.ToSemanticStringWithoutBuild();
         }
         catch
         {
-            return assembly.GetName()?.Version?.ToString(3) ?? "14.0.0";
+            return assembly.GetName()?.Version?.ToString(3) ?? "15.0.0";
         }
     }
 }
