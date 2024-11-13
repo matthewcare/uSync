@@ -40,7 +40,7 @@ const menuSidebarApp: UmbExtensionManifest = {
 	name: 'uSync section sidebar menu',
 	weight: 150,
 	meta: {
-		label: 'Syncronisation',
+		label: 'Synchronisation',
 		menu: menu.alias,
 	},
 	conditions: [
