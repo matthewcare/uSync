@@ -4,9 +4,9 @@
     "net9.0": {
       "Umbraco.Cms.Core": {
         "type": "Direct",
-        "requested": "[15.0.0-rc3, )",
-        "resolved": "15.0.0-rc3",
-        "contentHash": "58o5tPxDjCnxBlv5NhOr/BOwEceSntLlvRPk+gxExocOh4D68lgA0zlON7Xl/P2fvSRMjTkfIpFqyGDua8+QMA==",
+        "requested": "[15.0.0-rc4, )",
+        "resolved": "15.0.0-rc4",
+        "contentHash": "BxEhGj3SabMJS1VyXIHd9jvSOhl9C6DDb0Ti1E9fRnAWltREv+/4tWGqnGyEvK2P0DUeF+qmAfZQvz+ud/bS4w==",
         "dependencies": {
           "Microsoft.Extensions.Caching.Abstractions": "9.0.0-rc.2.24473.5",
           "Microsoft.Extensions.Caching.Memory": "9.0.0-rc.2.24473.5",
