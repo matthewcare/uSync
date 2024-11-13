@@ -51,7 +51,7 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
 
     private async Task<string?> ProcessBlockValuesAsync(string value, Func<object?, string, Task<object?>> GetValueMethod)
     {
-        var blockValue = GetBlockValue(value);
+        var blockValue = SyncBlockMapperBase<TBlockValue>.GetBlockValue(value);
         if (blockValue == null) return value;
 
         List<BlockItemData> blocks = [
@@ -96,18 +96,12 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
     private async Task<IContentType?> GetContentType(Guid contentTypeKey)
         => await _contentTypeService.GetAsync(contentTypeKey);
 
-    private TBlockValue? GetBlockValue(string value)
+    private static TBlockValue? GetBlockValue(string value)
     {
-        if (string.IsNullOrWhiteSpace(value)) return null;
-        try
-        {
-            return value.DeserializeJson<TBlockValue>();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting block value {value}", value);
-            return null;
-        }
+        if (value.TryDeserialize<TBlockValue>(out var blockValue) && blockValue is not null)
+            return blockValue;
+
+        return null;
     }
 
     public override async Task<IEnumerable<uSyncDependency>> GetDependenciesAsync(object value, string editorAlias, DependencyFlags flags)
@@ -120,7 +114,7 @@ public abstract class SyncBlockMapperBase<TBlockValue> : SyncValueMapperBase
         
         if (string.IsNullOrWhiteSpace(stringValue)) return [];
 
-        var blockValue = GetBlockValue(stringValue);
+        var blockValue = SyncBlockMapperBase<TBlockValue>.GetBlockValue(stringValue);
         if (blockValue == null) return [];
 
         var dependencies = new List<uSyncDependency>();
