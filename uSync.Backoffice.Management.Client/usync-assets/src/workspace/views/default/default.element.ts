@@ -112,7 +112,6 @@ export class uSyncDefaultViewElement extends UmbLitElement {
 	#performAction(event: CustomEventInit) {
 		this._showProgress = true;
 		this._group = event.detail.group;
-		console.log('perform action', event.detail);
 		this.#actionContext?.performAction({
 			group: event.detail.group,
 			action: event.detail.key,

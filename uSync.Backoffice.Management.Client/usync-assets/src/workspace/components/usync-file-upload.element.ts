@@ -56,7 +56,7 @@ export class uSyncFileUploadElement extends UmbLitElement {
 		const result = await this.#repository.processUpload(temporaryUnique);
 
 		if (!result?.success) {
-			console.log('error');
+			console.log('upload error', result);
 			return;
 		}
 

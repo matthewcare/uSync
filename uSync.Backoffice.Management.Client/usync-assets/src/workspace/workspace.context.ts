@@ -179,7 +179,6 @@ export class uSyncWorkspaceContext
 			// imports need to open the file dialog to get the file first.
 			const uploadResult = await this.uploadFile();
 			if (!uploadResult) {
-				console.log(uploadResult);
 				this.#completed.setValue(true);
 				this.#working.setValue(false);
 				this.#results.setValue([]);
