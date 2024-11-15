@@ -25,7 +25,7 @@ internal sealed class uSyncManifestReader : IPackageManifestReader
     public Task<IEnumerable<PackageManifest>> ReadPackageManifestsAsync()
     {
         var version = GetuSyncVersion();
-        var script = $"/App_Plugins/uSync/usync.js?v={version}";
+        var script = $"/App_Plugins/uSync/uSync.js?v={version}";
 
         List<PackageManifest> manifest = [
             new PackageManifest
