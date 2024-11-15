@@ -55,8 +55,8 @@ public class MemberTypeSerializer : ContentTypeBaseSerializer<IMemberType>, ISyn
         info.Add(SerializeCompositions((ContentTypeCompositionBase)item));
 
         node.Add(info);
-        node.Add(SerializePropertiesAsync(item));
-        node.Add(SerializeStructure(item));
+        node.Add(await SerializePropertiesAsync(item));
+        node.Add(await SerializeStructureAsync(item));
         node.Add(SerializeTabs(item));
 
         return SyncAttempt<XElement>.Succeed(item.Name ?? item.Alias, node, typeof(IMediaType), ChangeType.Export);
